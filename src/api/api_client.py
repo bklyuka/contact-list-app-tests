@@ -1,3 +1,5 @@
+from typing import Any
+
 from src.api.controller_registry import controller_classes
 from src.api.request import Request
 
@@ -12,7 +14,7 @@ class APIClient:
             setattr(self, name, instance)
             self._controllers.append(instance)
 
-    def __getattr__(self, name: str):
+    def __getattr__(self, name: str) -> Any:
         for controller in self._controllers:
             if hasattr(controller, name):
                 return getattr(controller, name)
