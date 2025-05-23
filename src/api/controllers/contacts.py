@@ -4,8 +4,14 @@ from src.api.request import Request
 
 
 class Contacts:
+    CONTACTS = "/contacts"
+    CONTACT_BY_ID = "/contacts/{id}"
+
     def __init__(self, request: Request):
         self._request = request
 
     def create_contact(self, contact_data: dict) -> APIResponse:
-        return self._request.post(path="/contacts", data=contact_data)
+        return self._request.post(path=self.CONTACTS, data=contact_data)
+
+    def get_contacts(self) -> APIResponse:
+        return self._request.get(path=self.CONTACTS)
