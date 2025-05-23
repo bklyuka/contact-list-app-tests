@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "25c2eef42db7d2695f00694994868228892fbb9685b394eed44f94314096a3a3"
+            "sha256": "bc1a92a9fca3e0d5dd56e104331a9deeb7ae94b7cfcc6e33747ae239690f9b07"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,13 @@
         ]
     },
     "default": {
+        "assertpy": {
+            "hashes": [
+                "sha256:acc64329934ad71a3221de185517a43af33e373bb44dc05b5a9b174394ef4833"
+            ],
+            "index": "pypi",
+            "version": "==1.1"
+        },
         "attrs": {
             "hashes": [
                 "sha256:427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
@@ -137,6 +144,15 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6'",
             "version": "==0.4.6"
+        },
+        "faker": {
+            "hashes": [
+                "sha256:48c94daa16a432f2d2bc803c7ff602509699fca228d13e97e379cd860a7e216e",
+                "sha256:77b79e7a2228d57175133af0bbcdd26dc623df81db390ee52f5104d46c010f2f"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==37.3.0"
         },
         "greenlet": {
             "hashes": [
@@ -473,6 +489,14 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==4.13.2"
+        },
+        "tzdata": {
+            "hashes": [
+                "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8",
+                "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9"
+            ],
+            "markers": "python_version >= '2'",
+            "version": "==2025.2"
         },
         "urllib3": {
             "hashes": [

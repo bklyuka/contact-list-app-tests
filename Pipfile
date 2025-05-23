@@ -8,6 +8,8 @@ pytest = "*"
 pytest-playwright = "*"
 jsonschema = "*"
 pytest-dotenv = "*"
+faker = "*"
+assertpy = "*"
 
 [dev-packages]
 
