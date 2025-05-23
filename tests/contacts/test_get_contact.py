@@ -1,5 +1,6 @@
-import random
+from random import choice
 from http import HTTPStatus
+from typing import Any
 
 import pytest
 from assertpy import assert_that
@@ -15,7 +16,7 @@ from src.responses import contact_schema
 def get_contact(auth_client: APIClient) -> dict:
     data = auth_client.get_contacts()
     contacts = data.json()
-    return random.choice(contacts)
+    return choice(contacts)
 
 
 class TestGetContact:
@@ -28,8 +29,12 @@ class TestGetContact:
         assert_that(response_data).is_equal_to(contact)
         validate(instance=response_data, schema=contact_schema)
 
-    @pytest.mark.parametrize("invalid", (get_random_string(), None, get_random_bool(), get_random_int()))
-    def test_get_contact_with_invalid_data(self, auth_client: APIClient, invalid) -> None:
+    @pytest.mark.parametrize(
+        "invalid",
+        (get_random_string(), None, get_random_bool(), get_random_int()),
+        ids=("string", "None", "boolean", "integer")
+    )
+    def test_get_contact_with_invalid_data(self, auth_client: APIClient, invalid: Any) -> None:
         response = auth_client.get_contact(contact_id=invalid)
 
         assert response.status == HTTPStatus.BAD_REQUEST

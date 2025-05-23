@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 
 from src.api.api_client import APIClient
 from src.api.request import Request
-from src.settings import API_URL, TEST_USER_PASSWORD, TEST_USER_EMAIL
+from src.settings import config
 
 
 @pytest.fixture(scope="session")
@@ -18,7 +18,7 @@ def playwright_context():
 def _build_request(context: APIRequestContext) -> Request:
     return Request(
         request=context,
-        base_url=API_URL
+        base_url=config.api_url
     )
 
 
@@ -27,7 +27,7 @@ def get_auth_client(playwright_context) -> APIClient:
     """Session with authentication"""
     request = _build_request(playwright_context)
     client = APIClient(request)
-    client.authenticate(user_email=TEST_USER_EMAIL, password=TEST_USER_PASSWORD)
+    client.authenticate(user_email=config.user_email, password=config.user_password)
     return client
 
 
