@@ -2,10 +2,12 @@ from http import HTTPStatus
 
 import pytest
 from assertpy import assert_that
+from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
 from src.helpers import get_random_string
 from src.payloads.contacts import CreateContact
+from src.responses import contact_schema
 
 
 @pytest.fixture(name="payload")
@@ -22,6 +24,7 @@ class TestAddContact:
 
         assert response.status == HTTPStatus.CREATED, response_data
         assert_that(payload).is_equal_to(response_data, ignore=self.IGNORED_RESPONSE_FIELDS)
+        validate(instance=response_data, schema=contact_schema)
 
     @pytest.mark.parametrize(
         "prop", (
@@ -36,6 +39,7 @@ class TestAddContact:
 
         assert response.status == HTTPStatus.CREATED, response_data
         assert_that(payload).is_equal_to(response_data, ignore=self.IGNORED_RESPONSE_FIELDS)
+        validate(instance=response_data, schema=contact_schema)
 
     @pytest.mark.parametrize("prop", ("firstName", "lastName"))
     def test_add_contact_without_required_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
