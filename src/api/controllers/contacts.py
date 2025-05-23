@@ -8,7 +8,7 @@ class Contacts:
     CONTACT_BY_ID = "/contacts/{id}"
 
     def __init__(self, request: Request):
-        self._request = request
+        self._request: Request = request
 
     def create_contact(self, contact_data: dict) -> APIResponse:
         return self._request.post(path=self.CONTACTS, data=contact_data)

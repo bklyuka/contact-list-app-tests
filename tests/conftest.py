@@ -31,7 +31,7 @@ def get_auth_client(playwright_context) -> APIClient:
     return client
 
 
-@pytest.fixture(scope="session", name="unauth_client")
+@pytest.fixture(name="unauth_client")
 def get_unauth_client(playwright_context) -> APIClient:
     """Session without authentication"""
     request = _build_request(playwright_context)
