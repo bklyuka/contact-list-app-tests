@@ -1,10 +1,12 @@
-import os
-
-from dotenv import load_dotenv
-
-load_dotenv()
+from dataclasses import dataclass
+from os import getenv
 
 
-API_URL = os.environ.get("API_URL")
-TEST_USER_EMAIL = os.environ.get("TEST_USER_EMAIL")
-TEST_USER_PASSWORD = os.environ.get("TEST_USER_PASSWORD")
+@dataclass(frozen=True)
+class AppConfig:
+    api_url: str = getenv("API_URL")
+    user_email: str = getenv("TEST_USER_EMAIL")
+    user_password: str = getenv("TEST_USER_PASSWORD")
+
+
+config = AppConfig()
