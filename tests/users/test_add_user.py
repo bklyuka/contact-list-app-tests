@@ -26,7 +26,7 @@ class TestAddUser:
         validate(instance=response_data, schema=user_schema)
 
     @pytest.mark.parametrize("prop", ("firstName", "lastName", "password"))
-    def test_add_user_without_optional_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
+    def test_add_user_without_required_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
         del payload[prop]
 
         response = auth_client.create_user(user_data=payload)
