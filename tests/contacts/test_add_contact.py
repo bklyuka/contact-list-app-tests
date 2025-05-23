@@ -7,7 +7,7 @@ from jsonschema.validators import validate
 from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors
 from src.helpers import get_random_string
-from src.payloads.contacts import CreateContact
+from src.payloads import CreateContact
 from src.responses import contact_schema
 
 
@@ -50,7 +50,7 @@ class TestAddContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert response_data["errors"][prop]["message"] == f"Path `{prop}` is required."
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(f"Path `{prop}` is required.")
 
     @pytest.mark.parametrize(
         "prop, error_txt",
@@ -74,7 +74,7 @@ class TestAddContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert response_data["errors"][prop]["message"] == error_txt
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(error_txt)
 
     def test_add_contact_without_token_provided(self, unauth_client: APIClient, payload: dict) -> None:
         response = unauth_client.create_contact(contact_data=payload)
