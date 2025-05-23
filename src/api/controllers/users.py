@@ -4,10 +4,14 @@ from src.api.request import Request
 
 
 class Users:
-    LOGIN = "/users/login"
+    LOGIN: str = "/users/login"
+    USERS: str = "/users"
 
     def __init__(self, request: Request):
         self._request: Request = request
 
     def login(self, login_data: dict) -> APIResponse:
         return self._request.post(path=self.LOGIN, data=login_data)
+
+    def create_user(self, user_data: dict) -> APIResponse:
+        return self._request.post(path=self.USERS, data=user_data)
