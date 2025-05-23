@@ -4,8 +4,8 @@ from src.api.request import Request
 
 
 class Contacts:
-    CONTACTS = "/contacts"
-    CONTACT_BY_ID = "/contacts/{id}"
+    CONTACTS: str = "/contacts"
+    CONTACT_BY_ID: str = "/contacts/{id}"
 
     def __init__(self, request: Request):
         self._request: Request = request

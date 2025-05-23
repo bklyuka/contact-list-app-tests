@@ -19,7 +19,7 @@ class APIClient:
         for controller in self._controllers:
             if hasattr(controller, name):
                 return getattr(controller, name)
-        raise AttributeError(f"No attribute '{name}'")
+        raise AttributeError(f"No attribute `{name}`")
 
     def authenticate(self, user_email: str, password: str) -> None:
         response = Users(self.request).login(
