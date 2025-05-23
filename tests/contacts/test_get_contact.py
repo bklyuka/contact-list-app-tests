@@ -7,8 +7,8 @@ from assertpy import assert_that
 from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
-from src.api.common import CommonAPIErrors
-from src.helpers import get_random_string, get_random_bool, get_random_int
+from src.api.common import CommonAPIErrors, ContactAPIErrors
+from src.helpers import get_random_string, get_random_bool, get_random_int, get_fake_id
 from src.responses import contact_schema
 
 
@@ -29,6 +29,12 @@ class TestGetContact:
         assert_that(response_data).is_equal_to(contact)
         validate(instance=response_data, schema=contact_schema)
 
+    def test_get_contact_with_non_existing_id(self, auth_client: APIClient) -> None:
+        response = auth_client.get_contact(contact_id=get_fake_id())
+
+        assert response.status == HTTPStatus.NOT_FOUND
+        assert_that(response.text()).is_empty()
+
     @pytest.mark.parametrize(
         "invalid",
         (get_random_string(), None, get_random_bool(), get_random_int()),
@@ -38,7 +44,7 @@ class TestGetContact:
         response = auth_client.get_contact(contact_id=invalid)
 
         assert response.status == HTTPStatus.BAD_REQUEST
-        assert response.text() == "Invalid Contact ID"
+        assert_that(response.text()).is_equal_to(ContactAPIErrors.INVALID_ID)
 
     def test_get_contact_without_token_provided(self, unauth_client: APIClient, contact: dict) -> None:
         response = unauth_client.get_contact(contact_id=contact["_id"])
