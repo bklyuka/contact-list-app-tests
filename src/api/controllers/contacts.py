@@ -15,3 +15,6 @@ class Contacts:
 
     def get_contacts(self) -> APIResponse:
         return self._request.get(path=self.CONTACTS)
+
+    def get_contact(self, contact_id: str) -> APIResponse:
+        return self._request.get(path=self.CONTACT_BY_ID.format(id=contact_id))
