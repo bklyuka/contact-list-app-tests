@@ -15,6 +15,7 @@ from src.payloads.contacts import CreateContact
 def get_contact_id(auth_client: APIClient) -> str:
     data = auth_client.get_contacts()
     contacts = data.json()
+
     if not contacts:
         contact = auth_client.create_contact(contact_data=CreateContact().__dict__)
         return contact.json()["_id"]
