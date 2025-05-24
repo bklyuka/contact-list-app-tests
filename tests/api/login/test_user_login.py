@@ -4,7 +4,7 @@ import pytest
 from assertpy import assert_that
 
 from src.api.api_client import APIClient
-from src.payloads import Login
+from src.payloads import LoginCredentials
 from src.responses import login_schema
 from src.settings import config
 from jsonschema.validators import validate
@@ -12,7 +12,7 @@ from jsonschema.validators import validate
 
 @pytest.fixture(name="payload")
 def get_login_payload() -> dict:
-    return Login().__dict__
+    return LoginCredentials().__dict__
 
 
 class TestUserLogin:

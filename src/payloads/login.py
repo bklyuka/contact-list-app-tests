@@ -5,6 +5,6 @@ from src.helpers import get_random_string
 
 
 @dataclass
-class Login:
+class LoginCredentials:
     email: str = field(default_factory=faker.email)
-    password: str = field(default_factory=lambda: get_random_string())
+    password: str = field(default_factory=get_random_string)
