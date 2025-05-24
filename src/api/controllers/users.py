@@ -23,3 +23,6 @@ class Users:
 
     def get_user_profile(self) -> APIResponse:
         return self._request.get(path=self.USER_PROFILE)
+
+    def delete_user_me(self) -> APIResponse:
+        return self._request.delete(path=self.USER_PROFILE)
