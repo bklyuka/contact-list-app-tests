@@ -1,4 +1,3 @@
 from .contacts import *
-from .credentials import *
-from .login import *
+from .login_credentials import *
 from .users import *

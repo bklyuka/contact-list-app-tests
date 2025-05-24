@@ -4,6 +4,6 @@ from src.helpers import get_random_string, get_fake_email
 
 
 @dataclass
-class Credentials:
+class LoginCredentials:
     email: str = field(default_factory=get_fake_email)
-    password: str = field(default_factory=get_random_string)
+    password: str = field(default_factory=lambda: get_random_string(length=7))
