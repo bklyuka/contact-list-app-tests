@@ -5,19 +5,35 @@ from assertpy import assert_that
 
 from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors
-from src.settings import config
+from src.payloads import CreateUser, Credentials
 
 
-@pytest.fixture(name="auth_client")
-def get_login_payload(unauth_client: APIClient) -> APIClient:
-    unauth_client.authenticate(user_email=config.user_email, password=config.user_password)
+@pytest.fixture(name="credentials")
+def get_creds_of_new_user(unauth_client: APIClient) -> Credentials:
+    credentials_ = Credentials()
+
+    unauth_client.create_user(
+        user_data=CreateUser(
+            email=credentials_.email,
+            password=credentials_.password
+        ).__dict__
+    )
+    return credentials_
+
+
+@pytest.fixture(name="client")
+def get_authenticated_new_client(unauth_client: APIClient, credentials: Credentials) -> APIClient:
+    unauth_client.authenticate(
+        user_email=credentials.email,
+        password=credentials.password
+    )
     return unauth_client
 
 
 class TestUserLogout:
 
-    def test_logout_successfully(self, auth_client: APIClient) -> None:
-        response = auth_client.logout()
+    def test_logout_successfully(self, client: APIClient) -> None:
+        response = client.logout()
 
         assert response.status == HTTPStatus.OK
         assert_that(response.text()).is_empty()
