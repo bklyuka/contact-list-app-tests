@@ -13,27 +13,37 @@ class Request:
     def __build_headers(self, extra_headers) -> dict:
         return {**self.headers, **extra_headers} if extra_headers else self.headers
 
+    def __build_url(self, path: str) -> str:
+        return f"{self.base_url}{path}"
+
     def set_token(self, token: str) -> None:
         self.token = token
         self.headers["Authorization"] = f"Bearer {token}"
 
     def get(self, path: str, params: Optional[dict] = None, extra_headers: Optional[dict] = None) -> APIResponse:
         return self.request.get(
-            url=self.base_url + path,
+            url=self.__build_url(path),
             headers=self.__build_headers(extra_headers),
             params=params
         )
 
     def post(self, path: str, data: Optional[dict] = None, extra_headers: Optional[dict] = None) -> APIResponse:
         return self.request.post(
-            url=self.base_url + path,
+            url=self.__build_url(path),
+            headers=self.__build_headers(extra_headers),
+            data=data
+        )
+
+    def put(self, path: str, data: Optional[dict] = None, extra_headers: Optional[dict] = None) -> APIResponse:
+        return self.request.put(
+            url=self.__build_url(path),
             headers=self.__build_headers(extra_headers),
             data=data
         )
 
     def patch(self, path: str, data: Optional[dict] = None, extra_headers: Optional[dict] = None) -> APIResponse:
         return self.request.patch(
-            url=self.base_url + path,
+            url=self.__build_url(path),
             headers=self.__build_headers(extra_headers),
             data=data
         )
@@ -41,6 +51,6 @@ class Request:
     def delete(self, path: str, extra_headers: Optional[dict] = None) -> APIResponse:
         headers = self.__build_headers(extra_headers)
         return self.request.delete(
-            url=self.base_url + path,
+            url=self.__build_url(path),
             headers=headers
         )

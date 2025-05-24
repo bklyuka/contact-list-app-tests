@@ -13,6 +13,9 @@ class Contacts:
     def create_contact(self, contact_data: dict) -> APIResponse:
         return self._request.post(path=self.CONTACTS, data=contact_data)
 
+    def update_contact(self, contact_id: str, contact_data: dict) -> APIResponse:
+        return self._request.put(path=self.CONTACT_BY_ID.format(id=contact_id), data=contact_data)
+
     def get_contacts(self) -> APIResponse:
         return self._request.get(path=self.CONTACTS)
 

@@ -8,7 +8,7 @@ from assertpy import assert_that
 from src.api.api_client import APIClient
 from src.api.common import ContactAPIErrors, CommonAPIErrors
 from src.helpers import get_fake_id, get_random_string, get_random_bool, get_random_int
-from src.payloads import CreateContact
+from src.payloads import CreateUpdateContact
 
 
 @pytest.fixture(scope="class", name="contact_id")
@@ -17,7 +17,7 @@ def get_contact_id(auth_client: APIClient) -> str:
     contacts = data.json()
 
     if not contacts:
-        contact = auth_client.create_contact(contact_data=CreateContact().__dict__)
+        contact = auth_client.create_contact(contact_data=CreateUpdateContact().__dict__)
         return contact.json()["_id"]
     return choice(contacts)["_id"]
 
