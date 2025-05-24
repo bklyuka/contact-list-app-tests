@@ -73,31 +73,31 @@ contact_schema = {
             "type": "string"
         },
         "email": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "birthdate": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "phone": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "street1": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "street2": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "city": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "stateProvince": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "postalCode": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "country": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "owner": {
             "type": "string"

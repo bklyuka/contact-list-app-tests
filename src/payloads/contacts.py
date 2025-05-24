@@ -5,7 +5,7 @@ from src.helpers import get_random_string, get_random_int
 
 
 @dataclass
-class CreateContact:
+class CreateUpdateContact:
     firstName: str = field(default_factory=lambda: get_random_string())
     lastName: str = field(default_factory=lambda: get_random_string())
     email: str = field(default_factory=faker.email)
