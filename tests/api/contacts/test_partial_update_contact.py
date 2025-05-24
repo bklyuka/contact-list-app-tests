@@ -52,10 +52,7 @@ class TestPartialUpdateContact:
     ) -> None:
         payload = {prop: value}
 
-        response = auth_client.partial_update_contact(
-            contact_id=contact_id,
-            contact_data=payload
-        )
+        response = auth_client.partial_update_contact(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
