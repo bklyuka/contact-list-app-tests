@@ -6,7 +6,7 @@ from assertpy import assert_that
 from src.api.api_client import APIClient
 from src.payloads import LoginCredentials
 from src.responses import login_schema
-from src.settings import config
+from src.application_data import config
 from jsonschema.validators import validate
 
 

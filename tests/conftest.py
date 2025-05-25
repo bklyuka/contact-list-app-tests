@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 
 from src.api.api_client import APIClient
 from src.api.request import Request
-from src.settings import config
+from src.application_data import config
 
 
 @pytest.fixture(scope="session")
@@ -18,7 +18,7 @@ def playwright_context():
 def _build_request(context: APIRequestContext) -> Request:
     return Request(
         request=context,
-        base_url=config.api_url
+        base_url=config.url
     )
 
 
