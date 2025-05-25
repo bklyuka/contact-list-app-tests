@@ -58,7 +58,7 @@ class TestUpdateContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(f"Path `{prop}` is required.")
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
 
     @pytest.mark.parametrize(
         "prop, error_txt",

@@ -5,6 +5,7 @@ from assertpy import assert_that
 from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
+from src.api.common import CommonAPIErrors
 from src.helpers import get_random_string
 from src.payloads import CreateUser
 from src.responses import user_schema
@@ -33,7 +34,7 @@ class TestAddUser:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(f"Path `{prop}` is required.")
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
 
     def test_add_user_without_email(self, auth_client: APIClient, payload: dict) -> None:
         del payload["email"]

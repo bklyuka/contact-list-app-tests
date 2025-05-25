@@ -11,7 +11,7 @@ from src.responses import contact_schema
 
 
 class TestAddContact:
-    IGNORED_RESPONSE_FIELDS = ["_id", "owner", "__v"]
+    IGNORED_RESPONSE_FIELDS: list = ["_id", "owner", "__v"]
 
     def test_add_contact_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
         response = auth_client.create_contact(contact_data=payload)
@@ -44,7 +44,7 @@ class TestAddContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(f"Path `{prop}` is required.")
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
 
     @pytest.mark.parametrize(
         "prop, error_txt",
