@@ -21,6 +21,9 @@ class Users:
     def create_user(self, user_data: dict) -> APIResponse:
         return self._request.post(path=self.USERS, data=user_data)
 
+    def partial_update_user(self, user_data: dict) -> APIResponse:
+        return self._request.patch(path=self.USER_PROFILE, data=user_data)
+
     def get_user_profile(self) -> APIResponse:
         return self._request.get(path=self.USER_PROFILE)
 

@@ -1,4 +1,4 @@
-user_schema = {
+create_user_schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {

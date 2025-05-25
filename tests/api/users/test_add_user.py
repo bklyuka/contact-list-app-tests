@@ -8,7 +8,7 @@ from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors
 from src.helpers import get_random_string
 from src.payloads import CreateUser
-from src.responses import user_schema
+from src.responses import create_user_schema
 
 
 @pytest.fixture(name="payload")
@@ -24,7 +24,7 @@ class TestAddUser:
 
         assert response.status == HTTPStatus.CREATED, response_data
         assert_that(payload).is_equal_to(response_data["user"], ignore=["_id", "password", "__v"])
-        validate(instance=response_data, schema=user_schema)
+        validate(instance=response_data, schema=create_user_schema)
 
     @pytest.mark.parametrize("prop", ("firstName", "lastName", "password"))
     def test_add_user_without_required_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
