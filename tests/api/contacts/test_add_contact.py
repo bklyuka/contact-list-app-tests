@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import List
 
 import pytest
 from assertpy import assert_that
@@ -11,7 +12,7 @@ from src.responses import contact_schema
 
 
 class TestAddContact:
-    IGNORED_RESPONSE_FIELDS: list = ["_id", "owner", "__v"]
+    IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
 
     def test_add_contact_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
         response = auth_client.create_contact(contact_data=payload)
@@ -49,10 +50,10 @@ class TestAddContact:
     @pytest.mark.parametrize(
         "prop, error_txt",
         [
-            ("email", "Email is invalid"),
-            ("birthdate", "Birthdate is invalid"),
-            ("phone", "Phone number is invalid"),
-            ("postalCode", "Postal code is invalid")
+            ("email", CommonAPIErrors.INVALID_PROP.format("Email")),
+            ("birthdate", CommonAPIErrors.INVALID_PROP.format("Birthdate")),
+            ("phone", CommonAPIErrors.INVALID_PROP.format("Phone number")),
+            ("postalCode", CommonAPIErrors.INVALID_PROP.format("Postal code")),
         ]
     )
     def test_add_contact_with_invalid_data(

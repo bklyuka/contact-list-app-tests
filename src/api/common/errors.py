@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class CommonAPIErrors:
     NOT_AUTHENTICATE: str = "Please authenticate."
     REQUIRED_PROP: str = "Path `{}` is required."
+    INVALID_PROP: str = "{} is invalid"
 
 
 @dataclass(frozen=True)

@@ -79,10 +79,10 @@ class TestPartialUpdateContact:
     @pytest.mark.parametrize(
         "prop, error_msg",
         [
-            ("email", "Email is invalid"),
-            ("birthdate", "Birthdate is invalid"),
-            ("phone", "Phone number is invalid"),
-            ("postalCode", "Postal code is invalid"),
+            ("email", CommonAPIErrors.INVALID_PROP.format("Email")),
+            ("birthdate", CommonAPIErrors.INVALID_PROP.format("Birthdate")),
+            ("phone", CommonAPIErrors.INVALID_PROP.format("Phone number")),
+            ("postalCode", CommonAPIErrors.INVALID_PROP.format("Postal code")),
         ]
     )
     def test_partial_update_contact_with_invalid_value_for_property(
