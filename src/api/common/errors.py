@@ -7,6 +7,7 @@ class CommonAPIErrors:
     REQUIRED_PROP: str = "Path `{}` is required."
     INVALID_PROP: str = "{} is invalid"
     MAX_ALLOWED: str = "Path `{}` (`{}`) is longer than the maximum allowed length ({})."
+    MIN_ALLOWED: str = "Path `{property}` (`{value}`) is shorter than the minimum allowed length ({min_limit})."
 
 
 @dataclass(frozen=True)
