@@ -1,0 +1,98 @@
+from http import HTTPStatus
+from typing import Any
+
+import pytest
+from assertpy import assert_that
+from jsonschema.validators import validate
+
+from src.api.api_client import APIClient
+from src.api.common import CommonAPIErrors
+from src.helpers import get_random_string, get_fake_email
+from src.responses import user_profile_schema
+from src.settings import config
+
+
+class TestPartialUpdateUser:
+
+    @pytest.mark.parametrize(
+        "prop, value",
+        [
+            ("firstName", get_random_string()),
+            ("lastName", get_random_string()),
+            ("email", get_fake_email()),
+            ("password", get_random_string(length=7)),
+        ]
+    )
+    def test_partial_update_user_with_valid_data(self, client: APIClient, prop: str, value: Any) -> None:
+        payload = {prop: value}
+
+        response = client.partial_update_user(user_data=payload)
+        response_data = response.json()
+
+        assert response.status == HTTPStatus.OK, response_data
+        if prop != "password":
+            assert_that(response_data).contains_entry(payload)
+        validate(instance=response_data, schema=user_profile_schema)
+
+    def test_partial_update_user_with_already_used_email(self, client: APIClient) -> None:
+        payload = {"email": config.user_email}
+
+        response = client.partial_update_user(user_data=payload)
+        response_data = response.json()
+
+        assert response.status == HTTPStatus.BAD_REQUEST, response_data
+        assert_that(response_data["keyValue"]).contains_entry(payload)
+
+    @pytest.mark.parametrize(
+        "prop, invalid_length_value, limit",
+        [
+            ("firstName", get_random_string(length=21), 20),
+            ("lastName", get_random_string(length=21), 20),
+            ("password", get_random_string(length=101), 100),
+        ]
+    )
+    def test_partial_update_user_with_invalid_max_length_value_for_property(
+            self,
+            client: APIClient,
+            prop: str,
+            invalid_length_value: str,
+            limit: int
+    ) -> None:
+        payload = {prop: invalid_length_value}
+
+        response = client.partial_update_user(user_data=payload)
+        response_data = response.json()
+
+        assert response.status == HTTPStatus.BAD_REQUEST, response_data
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(
+            CommonAPIErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
+        )
+
+    @pytest.mark.parametrize("prop", ("firstName", "lastName", "password"))
+    def test_partial_update_user_with_no_data_provided_for_property(
+            self,
+            client: APIClient,
+            prop: str
+    ) -> None:
+        payload = {prop: ""}
+
+        response = client.partial_update_user(user_data=payload)
+        response_data = response.json()
+
+        assert response.status == HTTPStatus.BAD_REQUEST, response_data
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
+
+    def test_partial_update_user_with_invalid_min_length_value_for_password(self, client: APIClient) -> None:
+        payload = {"password": get_random_string(length=6)}
+
+        response = client.partial_update_user(user_data=payload)
+        response_data = response.json()
+
+        assert response.status == HTTPStatus.BAD_REQUEST, response_data
+        assert_that(response_data["errors"]["password"]["message"]).is_equal_to(
+            CommonAPIErrors.MIN_ALLOWED.format(
+                property="password",
+                value=payload["password"],
+                min_limit=7
+            )
+        )
