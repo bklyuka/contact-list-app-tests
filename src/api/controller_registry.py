@@ -1,6 +1,6 @@
-from src.api.controllers import Contacts, Users
+from src.api.controllers import ContactAPI, UserAPI
 
 controller_classes = {
-    "contacts": Contacts,
-    "users": Users,
+    "contacts": ContactAPI,
+    "users": UserAPI,
 }
