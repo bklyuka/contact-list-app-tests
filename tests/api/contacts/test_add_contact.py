@@ -7,13 +7,7 @@ from jsonschema.validators import validate
 from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors
 from src.helpers import get_random_string
-from src.payloads import CreateUpdateContact
 from src.responses import contact_schema
-
-
-@pytest.fixture(name="payload")
-def get_contact_payload() -> dict:
-    return CreateUpdateContact().__dict__
 
 
 class TestAddContact:

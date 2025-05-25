@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from random import choice
 from typing import Any
 
 import pytest
@@ -10,19 +9,7 @@ from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors
 from src.faker_provider import faker
 from src.helpers import get_random_string, get_random_int, get_fake_email
-from src.payloads import CreateUpdateContact
 from src.responses import contact_schema
-
-
-@pytest.fixture(scope="class", name="contact_id")
-def get_contact_id(auth_client: APIClient) -> str:
-    data = auth_client.get_contacts()
-    contacts = data.json()
-
-    if not contacts:
-        contact = auth_client.create_contact(contact_data=CreateUpdateContact().__dict__)
-        return contact.json()["_id"]
-    return choice(contacts)["_id"]
 
 
 class TestPartialUpdateContact:

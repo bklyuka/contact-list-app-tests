@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from random import choice
 from typing import Any
 
 import pytest
@@ -9,24 +8,7 @@ from jsonschema.validators import validate
 from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors, ContactAPIErrors
 from src.helpers import get_random_string, get_random_bool, get_random_int
-from src.payloads import CreateUpdateContact
 from src.responses import contact_schema
-
-
-@pytest.fixture(scope="class", name="contact_id")
-def get_contact_id(auth_client: APIClient) -> str:
-    data = auth_client.get_contacts()
-    contacts = data.json()
-
-    if not contacts:
-        contact = auth_client.create_contact(contact_data=CreateUpdateContact().__dict__)
-        return contact.json()["_id"]
-    return choice(contacts)["_id"]
-
-
-@pytest.fixture(name="payload")
-def get_contact_payload() -> dict:
-    return CreateUpdateContact().__dict__
 
 
 class TestUpdateContact:
