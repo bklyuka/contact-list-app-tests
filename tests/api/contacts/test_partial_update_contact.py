@@ -47,34 +47,36 @@ class TestPartialUpdateContact:
         validate(instance=response_data, schema=contact_schema)
 
     @pytest.mark.parametrize(
-        "prop, value, error_msg",
+        "prop, invalid_length_value, limit",
         [
-            ("firstName", get_random_string(length=21), "Path `{}` (`{}`) is longer than the maximum allowed length (20)."),
-            ("lastName", get_random_string(length=21), "Path `{}` (`{}`) is longer than the maximum allowed length (20)."),
-            ("phone", get_random_string(length=16), "Path `{}` (`{}`) is longer than the maximum allowed length (15)."),
-            ("street1", get_random_string(length=41), "Path `{}` (`{}`) is longer than the maximum allowed length (40)."),
-            ("street2", get_random_string(length=41), "Path `{}` (`{}`) is longer than the maximum allowed length (40)."),
-            ("city", get_random_string(length=41), "Path `{}` (`{}`) is longer than the maximum allowed length (40)."),
-            ("stateProvince", get_random_string(length=21), "Path `{}` (`{}`) is longer than the maximum allowed length (20)."),
-            ("postalCode", get_random_string(length=11), "Path `{}` (`{}`) is longer than the maximum allowed length (10)."),
-            ("country", get_random_string(length=41), "Path `{}` (`{}`) is longer than the maximum allowed length (40)."),
+            ("firstName", get_random_string(length=21), 20),
+            ("lastName", get_random_string(length=21), 20),
+            ("phone", get_random_string(length=16), 15),
+            ("street1", get_random_string(length=41), 40),
+            ("street2", get_random_string(length=41), 40),
+            ("city", get_random_string(length=41), 40),
+            ("stateProvince", get_random_string(length=21), 20),
+            ("postalCode", get_random_string(length=11), 10),
+            ("country", get_random_string(length=41), 40),
         ]
     )
-    def test_partial_update_contact_with_invalid_length_value_for_property(
+    def test_partial_update_contact_with_invalid_max_length_value_for_property(
             self,
             auth_client: APIClient,
             contact_id: str,
             prop: str,
-            value: Any,
-            error_msg: str
+            invalid_length_value: Any,
+            limit: int
     ) -> None:
-        payload = {prop: value}
+        payload = {prop: invalid_length_value}
 
         response = auth_client.partial_update_contact(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(error_msg.format(prop, value))
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(
+            CommonAPIErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
+        )
 
     @pytest.mark.parametrize(
         "prop, error_msg",

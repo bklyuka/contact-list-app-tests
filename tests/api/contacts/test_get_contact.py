@@ -9,6 +9,7 @@ from jsonschema.validators import validate
 from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors, ContactAPIErrors
 from src.helpers import get_random_string, get_random_bool, get_random_int, get_fake_id
+from src.payloads import CreateUpdateContact
 from src.responses import contact_schema
 
 
@@ -16,6 +17,10 @@ from src.responses import contact_schema
 def get_contact(auth_client: APIClient) -> dict:
     data = auth_client.get_contacts()
     contacts = data.json()
+
+    if not contacts:
+        contact = auth_client.create_contact(contact_data=CreateUpdateContact().__dict__)
+        return contact.json()
     return choice(contacts)
 
 
