@@ -5,6 +5,7 @@ from assertpy import assert_that
 from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
+from src.api.common import CommonAPIErrors
 from src.helpers import get_random_string
 from src.payloads import CreateUser
 from src.responses import user_schema
@@ -33,7 +34,7 @@ class TestAddUser:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(f"Path `{prop}` is required.")
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
 
     def test_add_user_without_email(self, auth_client: APIClient, payload: dict) -> None:
         del payload["email"]
@@ -53,20 +54,46 @@ class TestAddUser:
         assert_that(response_data["message"]).is_equal_to("Email address is already in use")
 
     @pytest.mark.parametrize(
-        "prop, value, error_msg",
+        "prop, invalid_length_value, limit",
         [
-            ("firstName", get_random_string(length=21), "Path `{}` (`{}`) is longer than the maximum allowed length (20)."),
-            ("lastName", get_random_string(length=21), "Path `{}` (`{}`) is longer than the maximum allowed length (20)."),
-            ("password", get_random_string(length=6), "Path `{}` (`{}`) is shorter than the minimum allowed length (7)."),
+            ("firstName", get_random_string(length=21), 20),
+            ("lastName", get_random_string(length=21), 20),
+            ("password", get_random_string(length=101), 100),
         ]
     )
-    def test_add_user_with_invalid_length_value_for_property(
-            self, auth_client: APIClient, payload: dict, prop: str, value: str, error_msg: str
+    def test_add_user_with_invalid_max_length_value_for_property(
+            self,
+            auth_client: APIClient,
+            payload: dict,
+            prop: str,
+            invalid_length_value: str,
+            limit: int
     ) -> None:
-        payload[prop] = value
+        payload[prop] = invalid_length_value
 
         response = auth_client.create_user(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(error_msg.format(prop, value))
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(
+            CommonAPIErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
+        )
+
+    def test_add_user_with_invalid_min_length_value_for_password(
+            self,
+            auth_client: APIClient,
+            payload: dict
+    ) -> None:
+        payload["password"] = get_random_string(length=6)
+
+        response = auth_client.create_user(user_data=payload)
+        response_data = response.json()
+
+        assert response.status == HTTPStatus.BAD_REQUEST, response_data
+        assert_that(response_data["errors"]["password"]["message"]).is_equal_to(
+            CommonAPIErrors.MIN_ALLOWED.format(
+                property="password",
+                value=payload["password"],
+                min_limit=7
+            )
+        )

@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import List
 
 import pytest
 from assertpy import assert_that
@@ -7,17 +8,11 @@ from jsonschema.validators import validate
 from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors
 from src.helpers import get_random_string
-from src.payloads import CreateUpdateContact
 from src.responses import contact_schema
 
 
-@pytest.fixture(name="payload")
-def get_contact_payload() -> dict:
-    return CreateUpdateContact().__dict__
-
-
 class TestAddContact:
-    IGNORED_RESPONSE_FIELDS = ["_id", "owner", "__v"]
+    IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
 
     def test_add_contact_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
         response = auth_client.create_contact(contact_data=payload)
@@ -50,15 +45,15 @@ class TestAddContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(f"Path `{prop}` is required.")
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
 
     @pytest.mark.parametrize(
         "prop, error_txt",
         [
-            ("email", "Email is invalid"),
-            ("birthdate", "Birthdate is invalid"),
-            ("phone", "Phone number is invalid"),
-            ("postalCode", "Postal code is invalid")
+            ("email", CommonAPIErrors.INVALID_PROP.format("Email")),
+            ("birthdate", CommonAPIErrors.INVALID_PROP.format("Birthdate")),
+            ("phone", CommonAPIErrors.INVALID_PROP.format("Phone number")),
+            ("postalCode", CommonAPIErrors.INVALID_PROP.format("Postal code")),
         ]
     )
     def test_add_contact_with_invalid_data(

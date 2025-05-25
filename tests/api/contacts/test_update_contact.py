@@ -1,6 +1,5 @@
 from http import HTTPStatus
-from random import choice
-from typing import Any
+from typing import Any, List
 
 import pytest
 from assertpy import assert_that
@@ -9,28 +8,11 @@ from jsonschema.validators import validate
 from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors, ContactAPIErrors
 from src.helpers import get_random_string, get_random_bool, get_random_int
-from src.payloads import CreateUpdateContact
 from src.responses import contact_schema
 
 
-@pytest.fixture(scope="class", name="contact_id")
-def get_contact_id(auth_client: APIClient) -> str:
-    data = auth_client.get_contacts()
-    contacts = data.json()
-
-    if not contacts:
-        contact = auth_client.create_contact(contact_data=CreateUpdateContact().__dict__)
-        return contact.json()["_id"]
-    return choice(contacts)["_id"]
-
-
-@pytest.fixture(name="payload")
-def get_contact_payload() -> dict:
-    return CreateUpdateContact().__dict__
-
-
 class TestUpdateContact:
-    IGNORED_RESPONSE_FIELDS = ["_id", "owner", "__v"]
+    IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
 
     def test_update_contact_with_valid_data(self, auth_client: APIClient, payload: dict, contact_id: str) -> None:
         response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
@@ -76,15 +58,15 @@ class TestUpdateContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(f"Path `{prop}` is required.")
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
 
     @pytest.mark.parametrize(
         "prop, error_txt",
         [
-            ("email", "Email is invalid"),
-            ("birthdate", "Birthdate is invalid"),
-            ("phone", "Phone number is invalid"),
-            ("postalCode", "Postal code is invalid")
+            ("email", CommonAPIErrors.INVALID_PROP.format("Email")),
+            ("birthdate", CommonAPIErrors.INVALID_PROP.format("Birthdate")),
+            ("phone", CommonAPIErrors.INVALID_PROP.format("Phone number")),
+            ("postalCode", CommonAPIErrors.INVALID_PROP.format("Postal code")),
         ]
     )
     def test_update_contact_with_invalid_data(
