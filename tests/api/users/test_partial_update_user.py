@@ -9,7 +9,7 @@ from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors
 from src.helpers import get_random_string, get_fake_email
 from src.responses import user_profile_schema
-from src.settings import config
+from src.application_data import config
 
 
 class TestPartialUpdateUser:

@@ -6,7 +6,7 @@ from jsonschema.validators import validate
 from src.api.api_client import APIClient
 from src.api.common import CommonAPIErrors
 from src.responses import user_profile_schema
-from src.settings import config
+from src.application_data import config
 
 
 class TestGetUserProfile:
