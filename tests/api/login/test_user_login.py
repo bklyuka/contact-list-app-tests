@@ -18,7 +18,7 @@ def get_login_payload() -> dict:
 class TestUserLogin:
 
     def test_login_with_valid_data(self, unauth_client: APIClient) -> None:
-        response = unauth_client.login(login_data={
+        response = unauth_client.users.login(login_data={
             "email": config.user_email,
             "password": config.user_password
         })
@@ -29,7 +29,7 @@ class TestUserLogin:
         validate(instance=response_data, schema=login_schema)
 
     def test_login_with_invalid_data(self, unauth_client: APIClient, payload: dict) -> None:
-        response = unauth_client.login(login_data=payload)
+        response = unauth_client.users.login(login_data=payload)
 
         assert response.status == HTTPStatus.UNAUTHORIZED
         assert_that(response.text()).is_empty()
@@ -38,7 +38,7 @@ class TestUserLogin:
     def test_login_without_required_property(self, unauth_client: APIClient, payload: dict, prop: str) -> None:
         del payload[prop]
 
-        response = unauth_client.login(login_data=payload)
+        response = unauth_client.users.login(login_data=payload)
 
         assert response.status == HTTPStatus.UNAUTHORIZED
         assert_that(response.text()).is_empty()

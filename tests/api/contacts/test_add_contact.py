@@ -15,7 +15,7 @@ class TestAddContact:
     IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
 
     def test_add_contact_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
-        response = auth_client.create_contact(contact_data=payload)
+        response = auth_client.contacts.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.CREATED, response_data
@@ -30,7 +30,7 @@ class TestAddContact:
     def test_add_contact_without_optional_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
         del payload[prop]
 
-        response = auth_client.create_contact(contact_data=payload)
+        response = auth_client.contacts.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.CREATED, response_data
@@ -41,7 +41,7 @@ class TestAddContact:
     def test_add_contact_without_required_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
         del payload[prop]
 
-        response = auth_client.create_contact(contact_data=payload)
+        response = auth_client.contacts.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -65,14 +65,14 @@ class TestAddContact:
     ) -> None:
         payload[prop] = get_random_string()
 
-        response = auth_client.create_contact(contact_data=payload)
+        response = auth_client.contacts.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(error_txt)
 
     def test_add_contact_without_token_provided(self, unauth_client: APIClient, payload: dict) -> None:
-        response = unauth_client.create_contact(contact_data=payload)
+        response = unauth_client.contacts.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data

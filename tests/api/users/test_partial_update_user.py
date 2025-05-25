@@ -26,7 +26,7 @@ class TestPartialUpdateUser:
     def test_partial_update_user_with_valid_data(self, client: APIClient, prop: str, value: Any) -> None:
         payload = {prop: value}
 
-        response = client.partial_update_user(user_data=payload)
+        response = client.users.partial_update(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -37,7 +37,7 @@ class TestPartialUpdateUser:
     def test_partial_update_user_with_already_used_email(self, client: APIClient) -> None:
         payload = {"email": config.user_email}
 
-        response = client.partial_update_user(user_data=payload)
+        response = client.users.partial_update(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -60,7 +60,7 @@ class TestPartialUpdateUser:
     ) -> None:
         payload = {prop: invalid_length_value}
 
-        response = client.partial_update_user(user_data=payload)
+        response = client.users.partial_update(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -76,7 +76,7 @@ class TestPartialUpdateUser:
     ) -> None:
         payload = {prop: ""}
 
-        response = client.partial_update_user(user_data=payload)
+        response = client.users.partial_update(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -85,7 +85,7 @@ class TestPartialUpdateUser:
     def test_partial_update_user_with_invalid_min_length_value_for_password(self, client: APIClient) -> None:
         payload = {"password": get_random_string(length=6)}
 
-        response = client.partial_update_user(user_data=payload)
+        response = client.users.partial_update(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data

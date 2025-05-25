@@ -10,20 +10,20 @@ class Contacts:
     def __init__(self, request: Request):
         self._request: Request = request
 
-    def create_contact(self, contact_data: dict) -> APIResponse:
+    def create(self, contact_data: dict) -> APIResponse:
         return self._request.post(path=self.CONTACTS, data=contact_data)
 
-    def update_contact(self, contact_id: str, contact_data: dict) -> APIResponse:
+    def update_by_id(self, contact_id: str, contact_data: dict) -> APIResponse:
         return self._request.put(path=self.CONTACT_BY_ID.format(id=contact_id), data=contact_data)
 
-    def partial_update_contact(self, contact_id: str, contact_data: dict) -> APIResponse:
+    def partial_update_by_id(self, contact_id: str, contact_data: dict) -> APIResponse:
         return self._request.patch(path=self.CONTACT_BY_ID.format(id=contact_id), data=contact_data)
 
-    def get_contacts(self) -> APIResponse:
+    def get_all(self) -> APIResponse:
         return self._request.get(path=self.CONTACTS)
 
-    def get_contact(self, contact_id: str) -> APIResponse:
+    def get_by_id(self, contact_id: str) -> APIResponse:
         return self._request.get(path=self.CONTACT_BY_ID.format(id=contact_id))
 
-    def delete_contact(self, contact_id: str) -> APIResponse:
+    def delete_by_id(self, contact_id: str) -> APIResponse:
         return self._request.delete(path=self.CONTACT_BY_ID.format(id=contact_id))

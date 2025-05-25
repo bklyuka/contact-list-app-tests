@@ -1,28 +1,15 @@
-from typing import Any, List
-
-from src.api.controller_registry import controller_classes
-from src.api.controllers import Users
+from src.api.controllers import Users, Contacts
 from src.api.request import Request
 
 
 class APIClient:
     def __init__(self, request: Request):
         self.request: Request = request
-        self._controllers: List[Any] = []
-
-        for name, cls in controller_classes.items():
-            instance = cls(request)
-            setattr(self, name, instance)
-            self._controllers.append(instance)
-
-    def __getattr__(self, name: str) -> Any:
-        for controller in self._controllers:
-            if hasattr(controller, name):
-                return getattr(controller, name)
-        raise AttributeError(f"No attribute `{name}`")
+        self.contacts: Contacts = Contacts(request)
+        self.users: Users = Users(request)
 
     def authenticate(self, user_email: str, password: str) -> None:
-        response = Users(self.request).login(
+        response = self.users.login(
             login_data={
                 "email": user_email,
                 "password": password

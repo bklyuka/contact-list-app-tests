@@ -12,7 +12,7 @@ from src.settings import config
 class TestGetUserProfile:
 
     def test_get_user_profile_success(self, auth_client: APIClient) -> None:
-        response = auth_client.get_user_profile()
+        response = auth_client.users.get()
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -20,7 +20,7 @@ class TestGetUserProfile:
         validate(instance=response_data, schema=user_profile_schema)
 
     def test_get_user_profile_without_token_provided(self, unauth_client: APIClient) -> None:
-        response = unauth_client.get_user_profile()
+        response = unauth_client.users.get()
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data

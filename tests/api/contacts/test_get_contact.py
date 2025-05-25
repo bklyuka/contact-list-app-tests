@@ -15,11 +15,11 @@ from src.responses import contact_schema
 
 @pytest.fixture(scope="class", name="contact")
 def get_contact(auth_client: APIClient) -> dict:
-    data = auth_client.get_contacts()
+    data = auth_client.contacts.get_all()
     contacts = data.json()
 
     if not contacts:
-        contact = auth_client.create_contact(contact_data=CreateUpdateContact().__dict__)
+        contact = auth_client.contacts.create(contact_data=CreateUpdateContact().__dict__)
         return contact.json()
     return choice(contacts)
 
@@ -27,7 +27,7 @@ def get_contact(auth_client: APIClient) -> dict:
 class TestGetContact:
 
     def test_get_contact(self, auth_client: APIClient, contact: dict) -> None:
-        response = auth_client.get_contact(contact_id=contact["_id"])
+        response = auth_client.contacts.get_by_id(contact_id=contact["_id"])
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -35,7 +35,7 @@ class TestGetContact:
         validate(instance=response_data, schema=contact_schema)
 
     def test_get_contact_with_non_existing_id(self, auth_client: APIClient) -> None:
-        response = auth_client.get_contact(contact_id=get_fake_id())
+        response = auth_client.contacts.get_by_id(contact_id=get_fake_id())
 
         assert response.status == HTTPStatus.NOT_FOUND
         assert_that(response.text()).is_empty()
@@ -46,13 +46,13 @@ class TestGetContact:
         ids=("string", "None", "boolean", "integer")
     )
     def test_get_contact_with_invalid_data(self, auth_client: APIClient, invalid: Any) -> None:
-        response = auth_client.get_contact(contact_id=invalid)
+        response = auth_client.contacts.get_by_id(contact_id=invalid)
 
         assert response.status == HTTPStatus.BAD_REQUEST
         assert_that(response.text()).is_equal_to(ContactAPIErrors.INVALID_ID)
 
     def test_get_contact_without_token_provided(self, unauth_client: APIClient, contact: dict) -> None:
-        response = unauth_client.get_contact(contact_id=contact["_id"])
+        response = unauth_client.contacts.get_by_id(contact_id=contact["_id"])
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data

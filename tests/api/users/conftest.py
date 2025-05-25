@@ -8,7 +8,7 @@ from src.payloads import CreateUser, LoginCredentials
 def get_creds_of_new_user(unauth_client: APIClient) -> LoginCredentials:
     credentials_ = LoginCredentials()
 
-    unauth_client.create_user(
+    unauth_client.users.create(
         user_data=CreateUser(
             email=credentials_.email,
             password=credentials_.password

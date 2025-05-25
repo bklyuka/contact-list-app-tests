@@ -12,7 +12,7 @@ from src.payloads import CreateUser, LoginCredentials
 def get_creds_of_new_user(unauth_client: APIClient) -> LoginCredentials:
     credentials_ = LoginCredentials()
 
-    unauth_client.create_user(
+    unauth_client.users.create(
         user_data=CreateUser(
             email=credentials_.email,
             password=credentials_.password
@@ -33,13 +33,13 @@ def get_authenticated_new_client(unauth_client: APIClient, credentials: LoginCre
 class TestUserLogout:
 
     def test_logout_successfully(self, client: APIClient) -> None:
-        response = client.logout()
+        response = client.users.logout()
 
         assert response.status == HTTPStatus.OK
         assert_that(response.text()).is_empty()
 
     def test_logout_for_not_authenticated_client(self, unauth_client: APIClient) -> None:
-        response = unauth_client.logout()
+        response = unauth_client.users.logout()
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data

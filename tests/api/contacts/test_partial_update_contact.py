@@ -39,7 +39,7 @@ class TestPartialUpdateContact:
     ) -> None:
         payload = {prop: value}
 
-        response = auth_client.partial_update_contact(contact_id=contact_id, contact_data=payload)
+        response = auth_client.contacts.partial_update_by_id(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -70,7 +70,7 @@ class TestPartialUpdateContact:
     ) -> None:
         payload = {prop: invalid_length_value}
 
-        response = auth_client.partial_update_contact(contact_id=contact_id, contact_data=payload)
+        response = auth_client.contacts.partial_update_by_id(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -96,14 +96,14 @@ class TestPartialUpdateContact:
     ) -> None:
         payload = {prop: get_random_string()}
 
-        response = auth_client.partial_update_contact(contact_id=contact_id, contact_data=payload)
+        response = auth_client.contacts.partial_update_by_id(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(error_msg)
 
     def test_partial_update_contact_without_token_provided(self, unauth_client: APIClient, contact_id: str) -> None:
-        response = unauth_client.partial_update_contact(contact_id=contact_id, contact_data={})
+        response = unauth_client.contacts.partial_update_by_id(contact_id=contact_id, contact_data={})
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data

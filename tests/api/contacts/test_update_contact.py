@@ -15,7 +15,7 @@ class TestUpdateContact:
     IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
 
     def test_update_contact_with_valid_data(self, auth_client: APIClient, payload: dict, contact_id: str) -> None:
-        response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = auth_client.contacts.update_by_id(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -36,7 +36,7 @@ class TestUpdateContact:
     ) -> None:
         del payload[prop]
 
-        response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = auth_client.contacts.update_by_id(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -54,7 +54,7 @@ class TestUpdateContact:
     ) -> None:
         del payload[prop]
 
-        response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = auth_client.contacts.update_by_id(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -79,7 +79,7 @@ class TestUpdateContact:
     ) -> None:
         payload[prop] = get_random_string()
 
-        response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = auth_client.contacts.update_by_id(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -91,7 +91,7 @@ class TestUpdateContact:
             contact_id: str,
             payload: dict
     ) -> None:
-        response = unauth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = unauth_client.contacts.update_by_id(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
@@ -103,7 +103,7 @@ class TestUpdateContact:
         ids=("string", "None", "boolean", "integer")
     )
     def test_update_contact_with_invalid_contact_id(self, auth_client: APIClient, payload: dict, invalid: Any) -> None:
-        response = auth_client.update_contact(contact_id=invalid, contact_data=payload)
+        response = auth_client.contacts.update_by_id(contact_id=invalid, contact_data=payload)
 
         assert response.status == HTTPStatus.BAD_REQUEST
         assert_that(response.text()).is_equal_to(ContactAPIErrors.INVALID_ID)
