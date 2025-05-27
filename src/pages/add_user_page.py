@@ -13,6 +13,4 @@ class AddUserPage(BasePage):
         self.password_field = self.page.locator("#password")
         self.submit_btn = self.page.get_by_role(role="button", name="Submit")
         self.cancel_btn = self.page.get_by_role(role="button", name="Cancel")
-        self.used_email_msg: str = "Email address is already in use"
         self.required_msg = "{}: Path `{}` is required."
-        self.invalid_email_msg = "Email is invalid"

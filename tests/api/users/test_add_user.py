@@ -5,7 +5,7 @@ from assertpy import assert_that
 from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
-from src.api.common import CommonAPIErrors
+from src.errors import CommonErrors, UserErrors
 from src.helpers import get_random_string
 from src.payloads import CreateUser
 from src.responses import create_user_schema
@@ -34,7 +34,7 @@ class TestAddUser:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonErrors.REQUIRED_PROP.format(prop))
 
     def test_add_user_without_email(self, auth_client: APIClient, payload: dict) -> None:
         del payload["email"]
@@ -43,7 +43,7 @@ class TestAddUser:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["message"]).is_equal_to("Email address is already in use")
+        assert_that(response_data["message"]).is_equal_to(UserErrors.USED_EMAIL)
 
     def test_add_user_with_already_used_email(self, auth_client: APIClient, payload: dict) -> None:
         for _ in range(2):
@@ -51,7 +51,7 @@ class TestAddUser:
             response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["message"]).is_equal_to("Email address is already in use")
+        assert_that(response_data["message"]).is_equal_to(UserErrors.USED_EMAIL)
 
     @pytest.mark.parametrize(
         "prop, invalid_length_value, limit",
@@ -76,7 +76,7 @@ class TestAddUser:
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(
-            CommonAPIErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
+            CommonErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
         )
 
     def test_add_user_with_invalid_min_length_value_for_password(
@@ -91,7 +91,7 @@ class TestAddUser:
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"]["password"]["message"]).is_equal_to(
-            CommonAPIErrors.MIN_ALLOWED.format(
+            CommonErrors.MIN_ALLOWED.format(
                 property="password",
                 value=payload["password"],
                 min_limit=7

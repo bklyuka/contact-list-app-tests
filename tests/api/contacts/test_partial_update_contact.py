@@ -6,7 +6,7 @@ from assertpy import assert_that
 from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
-from src.api.common import CommonAPIErrors
+from src.errors import CommonErrors
 from src.faker_provider import faker
 from src.helpers import get_random_string, get_random_int, get_fake_email
 from src.responses import contact_schema
@@ -75,16 +75,16 @@ class TestPartialUpdateContact:
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(
-            CommonAPIErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
+            CommonErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
         )
 
     @pytest.mark.parametrize(
         "prop, error_msg",
         [
-            ("email", CommonAPIErrors.INVALID_PROP.format("Email")),
-            ("birthdate", CommonAPIErrors.INVALID_PROP.format("Birthdate")),
-            ("phone", CommonAPIErrors.INVALID_PROP.format("Phone number")),
-            ("postalCode", CommonAPIErrors.INVALID_PROP.format("Postal code")),
+            ("email", CommonErrors.INVALID_PROP.format("Email")),
+            ("birthdate", CommonErrors.INVALID_PROP.format("Birthdate")),
+            ("phone", CommonErrors.INVALID_PROP.format("Phone number")),
+            ("postalCode", CommonErrors.INVALID_PROP.format("Postal code")),
         ]
     )
     def test_partial_update_contact_with_invalid_value_for_property(
@@ -107,4 +107,4 @@ class TestPartialUpdateContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
-        assert_that(response_data).is_equal_to(dict(error=CommonAPIErrors.NOT_AUTHENTICATE))
+        assert_that(response_data).is_equal_to(dict(error=CommonErrors.NOT_AUTHENTICATE))
