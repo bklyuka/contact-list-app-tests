@@ -20,6 +20,9 @@ class Request:
         self._token = token
         self._headers["Authorization"] = f"Bearer {token}"
 
+    def get_token(self) -> str:
+        return self._token.removeprefix("Bearer").lstrip()
+
     def get(self, path: str, params: Optional[dict] = None, extra_headers: Optional[dict] = None) -> APIResponse:
         return self._request.get(
             url=self.__build_url(path),

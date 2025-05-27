@@ -21,9 +21,9 @@ def page(browser: Browser) -> Page:
 
 
 @pytest.fixture(autouse=True)
-def auto_login(page, request):
+def auto_login(page, request, auth_client):
     if request.node.get_closest_marker("skip_login"):
         yield
         return
-    # TODO: login logic
+    page.context.add_cookies([]) # TODO
     yield

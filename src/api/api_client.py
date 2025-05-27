@@ -29,3 +29,6 @@ class APIClient:
             }
         )
         self._request.set_token(response.json()["token"])
+
+    def get_token(self):
+        return self._request.get_token()
