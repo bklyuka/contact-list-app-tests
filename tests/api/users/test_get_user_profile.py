@@ -4,7 +4,7 @@ from assertpy import assert_that
 from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
-from src.api.common import CommonAPIErrors
+from src.errors import CommonErrors
 from src.responses import user_profile_schema
 from src.application_data import config
 
@@ -24,4 +24,4 @@ class TestGetUserProfile:
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
-        assert_that(response_data).is_equal_to(dict(error=CommonAPIErrors.NOT_AUTHENTICATE))
+        assert_that(response_data).is_equal_to(dict(error=CommonErrors.NOT_AUTHENTICATE))

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class CommonAPIErrors:
+class CommonErrors:
     NOT_AUTHENTICATE: str = "Please authenticate."
     REQUIRED_PROP: str = "Path `{}` is required."
     INVALID_PROP: str = "{} is invalid"
@@ -11,5 +11,10 @@ class CommonAPIErrors:
 
 
 @dataclass(frozen=True)
-class ContactAPIErrors:
+class ContactErrors:
     INVALID_ID: str = "Invalid Contact ID"
+
+
+@dataclass(frozen=True)
+class UserErrors:
+    USED_EMAIL: str = "Email address is already in use"

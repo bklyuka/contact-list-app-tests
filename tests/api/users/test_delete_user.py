@@ -3,7 +3,7 @@ from http import HTTPStatus
 from assertpy import assert_that
 
 from src.api.api_client import APIClient
-from src.api.common import CommonAPIErrors
+from src.errors import CommonErrors
 
 
 class TestDeleteUser:
@@ -19,4 +19,4 @@ class TestDeleteUser:
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
-        assert_that(response_data).is_equal_to(dict(error=CommonAPIErrors.NOT_AUTHENTICATE))
+        assert_that(response_data).is_equal_to(dict(error=CommonErrors.NOT_AUTHENTICATE))

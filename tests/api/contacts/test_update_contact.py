@@ -6,7 +6,7 @@ from assertpy import assert_that
 from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
-from src.api.common import CommonAPIErrors, ContactAPIErrors
+from src.errors import ContactErrors, CommonErrors
 from src.helpers import get_random_string, get_random_bool, get_random_int
 from src.responses import contact_schema
 
@@ -58,15 +58,15 @@ class TestUpdateContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonErrors.REQUIRED_PROP.format(prop))
 
     @pytest.mark.parametrize(
         "prop, error_txt",
         [
-            ("email", CommonAPIErrors.INVALID_PROP.format("Email")),
-            ("birthdate", CommonAPIErrors.INVALID_PROP.format("Birthdate")),
-            ("phone", CommonAPIErrors.INVALID_PROP.format("Phone number")),
-            ("postalCode", CommonAPIErrors.INVALID_PROP.format("Postal code")),
+            ("email", CommonErrors.INVALID_PROP.format("Email")),
+            ("birthdate", CommonErrors.INVALID_PROP.format("Birthdate")),
+            ("phone", CommonErrors.INVALID_PROP.format("Phone number")),
+            ("postalCode", CommonErrors.INVALID_PROP.format("Postal code")),
         ]
     )
     def test_update_contact_with_invalid_data(
@@ -95,7 +95,7 @@ class TestUpdateContact:
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
-        assert_that(response_data).is_equal_to(dict(error=CommonAPIErrors.NOT_AUTHENTICATE))
+        assert_that(response_data).is_equal_to(dict(error=CommonErrors.NOT_AUTHENTICATE))
 
     @pytest.mark.parametrize(
         "invalid",
@@ -106,4 +106,4 @@ class TestUpdateContact:
         response = auth_client.update_contact(contact_id=invalid, contact_data=payload)
 
         assert response.status == HTTPStatus.BAD_REQUEST
-        assert_that(response.text()).is_equal_to(ContactAPIErrors.INVALID_ID)
+        assert_that(response.text()).is_equal_to(ContactErrors.INVALID_ID)

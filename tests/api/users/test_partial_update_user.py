@@ -6,7 +6,7 @@ from assertpy import assert_that
 from jsonschema.validators import validate
 
 from src.api.api_client import APIClient
-from src.api.common import CommonAPIErrors
+from src.errors import CommonErrors
 from src.helpers import get_random_string, get_fake_email
 from src.responses import user_profile_schema
 from src.application_data import config
@@ -65,7 +65,7 @@ class TestPartialUpdateUser:
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(
-            CommonAPIErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
+            CommonErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
         )
 
     @pytest.mark.parametrize("prop", ("firstName", "lastName", "password"))
@@ -80,7 +80,7 @@ class TestPartialUpdateUser:
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
-        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonAPIErrors.REQUIRED_PROP.format(prop))
+        assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonErrors.REQUIRED_PROP.format(prop))
 
     def test_partial_update_user_with_invalid_min_length_value_for_password(self, client: APIClient) -> None:
         payload = {"password": get_random_string(length=6)}
@@ -90,7 +90,7 @@ class TestPartialUpdateUser:
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"]["password"]["message"]).is_equal_to(
-            CommonAPIErrors.MIN_ALLOWED.format(
+            CommonErrors.MIN_ALLOWED.format(
                 property="password",
                 value=payload["password"],
                 min_limit=7

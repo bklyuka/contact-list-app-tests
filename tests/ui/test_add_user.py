@@ -4,6 +4,7 @@ import pytest
 from playwright.sync_api import expect
 
 from src.application_data import config
+from src.errors import UserErrors, CommonErrors
 from src.pages.add_user_page import AddUserPage
 from src.payloads import CreateUser
 
@@ -26,7 +27,7 @@ class TestAddUser:
         expect(add_user_page.error).to_have_text(
             f"User validation failed: {add_user_page.required_msg.format("firstName", "firstName")}, "
             f"{add_user_page.required_msg.format("lastName", "lastName")}, "
-            f"email: {add_user_page.invalid_email_msg}, {add_user_page.required_msg.format("password", "password")}"
+            f"email: {CommonErrors.INVALID_PROP.format("Email")}, {add_user_page.required_msg.format("password", "password")}"
         )
 
     def test_add_user_without_first_name_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
@@ -55,7 +56,9 @@ class TestAddUser:
         add_user_page.password_field.fill(user_data.password)
         add_user_page.submit_btn.click()
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
-        expect(add_user_page.error).to_have_text(f"User validation failed: email: {add_user_page.invalid_email_msg}")
+        expect(add_user_page.error).to_have_text(
+            f"User validation failed: email: {CommonErrors.INVALID_PROP.format("Email")}"
+        )
 
     def test_add_user_without_password_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.first_name_field.fill(user_data.firstName)
@@ -74,7 +77,7 @@ class TestAddUser:
         add_user_page.password_field.fill(user_data.password)
         add_user_page.submit_btn.click()
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
-        expect(add_user_page.error).to_have_text(add_user_page.used_email_msg)
+        expect(add_user_page.error).to_have_text(UserErrors.USED_EMAIL)
 
     def test_navigation_to_login_page_from_add_user(self, add_user_page: AddUserPage) -> None:
         add_user_page.cancel_btn.click()
