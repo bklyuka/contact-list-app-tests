@@ -1,18 +1,18 @@
 import pytest
-from playwright.sync_api import Playwright, Browser
+from playwright.sync_api import Playwright, Browser, Page
 
 from src.application_data import config
 
 
 @pytest.fixture(scope="class")
-def browser(playwright: Playwright):
+def browser(playwright: Playwright) -> Browser:
     browser = playwright.chromium.launch(headless=False)
     yield browser
     browser.close()
 
 
 @pytest.fixture(scope="class")
-def page(browser: Browser):
+def page(browser: Browser) -> Page:
     context = browser.new_context(base_url=config.url)
     page = context.new_page()
     yield page

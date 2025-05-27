@@ -10,4 +10,5 @@ class LoginPage(BasePage):
         self.email_field = self.page.locator("#email")
         self.password_field = self.page.locator("#password")
         self.submit_btn = self.page.get_by_role(role="button", name="Submit")
+        self.sign_up_btn = self.page.get_by_role(role="button", name="Sign up")
         self.incorrect_password_error_msg: str = "Incorrect username or password"
