@@ -8,8 +8,8 @@ from src.helpers import get_random_string, get_random_int
 class CreateUpdateContact:
     firstName: str = field(default_factory=get_random_string)
     lastName: str = field(default_factory=get_random_string)
-    email: str = field(default_factory=faker.email)
     birthdate: str = field(default_factory=lambda: faker.date_of_birth().strftime("%Y-%m-%d"))
+    email: str = field(default_factory=faker.email)
     phone: str = field(default_factory=lambda: str(get_random_int()))
     street1: str = field(default_factory=faker.street_address)
     street2: str = field(default_factory=get_random_string)
