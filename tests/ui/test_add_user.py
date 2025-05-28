@@ -19,6 +19,7 @@ def get_add_user_data() -> CreateUser:
     return CreateUser()
 
 
+@pytest.mark.skip_login
 class TestAddUser:
 
     def test_add_user_without_data_set(self, add_user_page: AddUserPage) -> None:
