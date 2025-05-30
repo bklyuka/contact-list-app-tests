@@ -23,6 +23,15 @@ def get_add_user_data() -> CreateUser:
 @pytest.mark.skip_login
 class TestAddUser:
 
+    def test_add_user_with_valid_data(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
+        add_user_page.first_name_field.fill(user_data.firstName)
+        add_user_page.last_name_field.fill(user_data.lastName)
+        add_user_page.email_field.fill(user_data.email)
+        add_user_page.password_field.fill(user_data.password)
+        add_user_page.submit_btn.click()
+        expect(add_user_page.page_name).to_have_text("Contact List")
+        expect(add_user_page.page).to_have_url(re.compile(".*contactList"))
+
     def test_add_user_without_data_set(self, add_user_page: AddUserPage) -> None:
         add_user_page.submit_btn.click()
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
