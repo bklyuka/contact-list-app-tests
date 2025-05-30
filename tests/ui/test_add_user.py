@@ -24,10 +24,12 @@ def get_add_user_data() -> CreateUser:
 class TestAddUser:
 
     def test_add_user_with_valid_data(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
-        add_user_page.first_name_field.fill(user_data.firstName)
-        add_user_page.last_name_field.fill(user_data.lastName)
-        add_user_page.email_field.fill(user_data.email)
-        add_user_page.password_field.fill(user_data.password)
+        add_user_page.fill_and_submit_form(
+            first_name=user_data.firstName,
+            last_name=user_data.lastName,
+            email=user_data.email,
+            password=user_data.password
+        )
         add_user_page.submit_btn.click()
         expect(add_user_page.page_name).to_have_text("Contact List")
         expect(add_user_page.page).to_have_url(re.compile(".*contactList"))
@@ -43,51 +45,56 @@ class TestAddUser:
         )
 
     def test_add_user_without_first_name_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
-        add_user_page.last_name_field.fill(user_data.lastName)
-        add_user_page.email_field.fill(user_data.email)
-        add_user_page.password_field.fill(user_data.password)
-        add_user_page.submit_btn.click()
+        add_user_page.fill_and_submit_form(
+            last_name=user_data.lastName,
+            email=user_data.email,
+            password=user_data.password
+        )
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(
             f"User validation failed: {add_user_page.required_msg.format("firstName", "firstName")}"
         )
 
     def test_add_user_without_last_name_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
-        add_user_page.first_name_field.fill(user_data.firstName)
-        add_user_page.email_field.fill(user_data.email)
-        add_user_page.password_field.fill(user_data.password)
-        add_user_page.submit_btn.click()
+        add_user_page.fill_and_submit_form(
+            first_name=user_data.firstName,
+            email=user_data.email,
+            password=user_data.password
+        )
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(
             f"User validation failed: {add_user_page.required_msg.format("lastName", "lastName")}"
         )
 
     def test_add_user_without_email_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
-        add_user_page.first_name_field.fill(user_data.firstName)
-        add_user_page.last_name_field.fill(user_data.lastName)
-        add_user_page.password_field.fill(user_data.password)
-        add_user_page.submit_btn.click()
+        add_user_page.fill_and_submit_form(
+            first_name=user_data.firstName,
+            last_name=user_data.lastName,
+            password=user_data.password
+        )
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(
             f"User validation failed: email: {CommonErrors.INVALID_PROP.format("Email")}"
         )
 
     def test_add_user_without_password_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
-        add_user_page.first_name_field.fill(user_data.firstName)
-        add_user_page.last_name_field.fill(user_data.lastName)
-        add_user_page.email_field.fill(user_data.email)
-        add_user_page.submit_btn.click()
+        add_user_page.fill_and_submit_form(
+            first_name=user_data.firstName,
+            last_name=user_data.lastName,
+            email=user_data.email
+        )
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(
             f"User validation failed: {add_user_page.required_msg.format("password", "password")}"
         )
 
     def test_add_user_with_already_used_email_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
-        add_user_page.first_name_field.fill(user_data.firstName)
-        add_user_page.last_name_field.fill(user_data.lastName)
-        add_user_page.email_field.fill(config.user_email)
-        add_user_page.password_field.fill(user_data.password)
-        add_user_page.submit_btn.click()
+        add_user_page.fill_and_submit_form(
+            first_name=user_data.firstName,
+            last_name=user_data.lastName,
+            email=config.user_email,
+            password=user_data.password
+        )
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(UserErrors.USED_EMAIL)
 
@@ -95,11 +102,13 @@ class TestAddUser:
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
         invalid_password = get_random_string(length=6)
-        add_user_page.first_name_field.fill(user_data.firstName)
-        add_user_page.last_name_field.fill(user_data.lastName)
-        add_user_page.email_field.fill(user_data.email)
-        add_user_page.password_field.fill(invalid_password)
-        add_user_page.submit_btn.click()
+
+        add_user_page.fill_and_submit_form(
+            first_name=user_data.firstName,
+            last_name=user_data.lastName,
+            email=user_data.email,
+            password=invalid_password
+        )
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(
             f"User validation failed: password: "
@@ -110,11 +119,13 @@ class TestAddUser:
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
         invalid_first_name = get_random_string(length=21)
-        add_user_page.first_name_field.fill(invalid_first_name)
-        add_user_page.last_name_field.fill(user_data.lastName)
-        add_user_page.email_field.fill(user_data.email)
-        add_user_page.password_field.fill(user_data.password)
-        add_user_page.submit_btn.click()
+
+        add_user_page.fill_and_submit_form(
+            first_name=invalid_first_name,
+            last_name=user_data.lastName,
+            email=user_data.email,
+            password=user_data.password
+        )
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(
             f"User validation failed: firstName: "
@@ -125,11 +136,13 @@ class TestAddUser:
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
         invalid_last_name = get_random_string(length=21)
-        add_user_page.first_name_field.fill(user_data.firstName)
-        add_user_page.last_name_field.fill(invalid_last_name)
-        add_user_page.email_field.fill(user_data.email)
-        add_user_page.password_field.fill(user_data.password)
-        add_user_page.submit_btn.click()
+
+        add_user_page.fill_and_submit_form(
+            first_name=user_data.firstName,
+            last_name=invalid_last_name,
+            email=user_data.email,
+            password=user_data.password
+        )
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(
             f"User validation failed: lastName: "
