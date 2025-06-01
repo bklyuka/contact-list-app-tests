@@ -26,6 +26,7 @@ def get_contact(auth_client: APIClient) -> dict:
 
 class TestAPIGetContact:
 
+    @pytest.mark.testomatio("@Tc1e88708")
     def test_get_contact(self, auth_client: APIClient, contact: dict) -> None:
         response = auth_client.get_contact(contact_id=contact["_id"])
         response_data = response.json()
@@ -34,12 +35,14 @@ class TestAPIGetContact:
         assert_that(response_data).is_equal_to(contact)
         validate(instance=response_data, schema=contact_schema)
 
+    @pytest.mark.testomatio("@T15642495")
     def test_get_contact_with_non_existing_id(self, auth_client: APIClient) -> None:
         response = auth_client.get_contact(contact_id=get_fake_id())
 
         assert response.status == HTTPStatus.NOT_FOUND
         assert_that(response.text()).is_empty()
 
+    @pytest.mark.testomatio("@Tb4e68d02")
     @pytest.mark.parametrize(
         "invalid",
         (get_random_string(), None, get_random_bool(), get_random_int()),
@@ -51,6 +54,7 @@ class TestAPIGetContact:
         assert response.status == HTTPStatus.BAD_REQUEST
         assert_that(response.text()).is_equal_to(ContactErrors.INVALID_ID)
 
+    @pytest.mark.testomatio("@T13fb3a78")
     def test_get_contact_without_token_provided(self, unauth_client: APIClient, contact: dict) -> None:
         response = unauth_client.get_contact(contact_id=contact["_id"])
         response_data = response.json()

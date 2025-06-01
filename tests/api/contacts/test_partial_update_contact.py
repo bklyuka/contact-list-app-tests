@@ -14,6 +14,7 @@ from src.responses import contact_schema
 
 class TestAPIPartialUpdateContact:
 
+    @pytest.mark.testomatio("@Tf497ca9e")
     @pytest.mark.parametrize(
         "prop, value",
         [
@@ -46,6 +47,7 @@ class TestAPIPartialUpdateContact:
         assert_that(response_data).contains_entry(payload)
         validate(instance=response_data, schema=contact_schema)
 
+    @pytest.mark.testomatio("@T9079d178")
     @pytest.mark.parametrize(
         "prop, invalid_length_value, limit",
         [
@@ -78,6 +80,7 @@ class TestAPIPartialUpdateContact:
             CommonErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
         )
 
+    @pytest.mark.testomatio("@Tb348abca")
     @pytest.mark.parametrize(
         "prop, error_msg",
         [
@@ -102,6 +105,7 @@ class TestAPIPartialUpdateContact:
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(error_msg)
 
+    @pytest.mark.testomatio("@T7d66a4bb")
     def test_partial_update_contact_without_token_provided(self, unauth_client: APIClient, contact_id: str) -> None:
         response = unauth_client.partial_update_contact(contact_id=contact_id, contact_data={})
         response_data = response.json()

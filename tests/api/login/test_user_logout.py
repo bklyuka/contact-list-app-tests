@@ -32,12 +32,14 @@ def get_authenticated_new_client(unauth_client: APIClient, credentials: LoginCre
 
 class TestAPIUserLogout:
 
+    @pytest.mark.testomatio("@T670d7605")
     def test_logout_successfully(self, client: APIClient) -> None:
         response = client.logout()
 
         assert response.status == HTTPStatus.OK
         assert_that(response.text()).is_empty()
 
+    @pytest.mark.testomatio("@Tf8391138")
     def test_logout_for_not_authenticated_client(self, unauth_client: APIClient) -> None:
         response = unauth_client.logout()
         response_data = response.json()

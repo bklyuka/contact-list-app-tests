@@ -23,6 +23,7 @@ def get_add_user_data() -> CreateUser:
 @pytest.mark.skip_login
 class TestUIAddUser:
 
+    @pytest.mark.testomatio("@T1cf3dc90")
     def test_add_user_with_valid_data_success(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -34,6 +35,7 @@ class TestUIAddUser:
         expect(add_user_page.page_name).to_have_text("Contact List")
         expect(add_user_page.page).to_have_url(re.compile(".*contactList"))
 
+    @pytest.mark.testomatio("@T2d3d0c76")
     def test_add_user_without_data_set(self, add_user_page: AddUserPage) -> None:
         add_user_page.submit_btn.click()
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
@@ -44,6 +46,7 @@ class TestUIAddUser:
             f"{add_user_page.required_msg.format("password", "password")}"
         )
 
+    @pytest.mark.testomatio("@T7cd86037")
     def test_add_user_without_first_name_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             last_name=user_data.lastName,
@@ -55,6 +58,7 @@ class TestUIAddUser:
             f"User validation failed: {add_user_page.required_msg.format("firstName", "firstName")}"
         )
 
+    @pytest.mark.testomatio("@T0fb9f8e9")
     def test_add_user_without_last_name_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -66,6 +70,7 @@ class TestUIAddUser:
             f"User validation failed: {add_user_page.required_msg.format("lastName", "lastName")}"
         )
 
+    @pytest.mark.testomatio("@Tc4ae28e6")
     def test_add_user_without_email_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -77,6 +82,7 @@ class TestUIAddUser:
             f"User validation failed: email: {CommonErrors.INVALID_PROP.format("Email")}"
         )
 
+    @pytest.mark.testomatio("@Td2f85b6f")
     def test_add_user_without_password_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -88,6 +94,7 @@ class TestUIAddUser:
             f"User validation failed: {add_user_page.required_msg.format("password", "password")}"
         )
 
+    @pytest.mark.testomatio("@Tadb4045f")
     def test_add_user_with_already_used_email_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -98,6 +105,7 @@ class TestUIAddUser:
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
         expect(add_user_page.error).to_have_text(UserErrors.USED_EMAIL)
 
+    @pytest.mark.testomatio("@Tfa6d1583")
     def test_add_user_with_invalid_length_value_for_password(
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
@@ -115,6 +123,7 @@ class TestUIAddUser:
             f"{CommonErrors.MIN_ALLOWED.format(property='password', value=invalid_password, min_limit=7)}"
         )
 
+    @pytest.mark.testomatio("@T411cf142")
     def test_add_user_with_invalid_length_value_for_first_name(
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
@@ -132,6 +141,7 @@ class TestUIAddUser:
             f"{CommonErrors.MAX_ALLOWED.format('firstName', invalid_first_name, 20)}"
         )
 
+    @pytest.mark.testomatio("@Td1d76049")
     def test_add_user_with_invalid_length_value_for_last_name(
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
@@ -149,6 +159,7 @@ class TestUIAddUser:
             f"{CommonErrors.MAX_ALLOWED.format('lastName', invalid_last_name, 20)}"
         )
 
+    @pytest.mark.testomatio("@T5f208300")
     def test_navigation_to_login_page_from_add_user(self, add_user_page: AddUserPage) -> None:
         add_user_page.cancel_btn.click()
         expect(add_user_page.page_name).to_have_text("Contact List App")

@@ -18,6 +18,7 @@ def get_user_payload() -> dict:
 
 class TestAPIAddUser:
 
+    @pytest.mark.testomatio("@Tdf19d3af")
     def test_add_user_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
         response = auth_client.create_user(user_data=payload)
         response_data = response.json()
@@ -26,6 +27,7 @@ class TestAPIAddUser:
         assert_that(payload).is_equal_to(response_data["user"], ignore=["_id", "password", "__v"])
         validate(instance=response_data, schema=create_user_schema)
 
+    @pytest.mark.testomatio("@Taf29d325")
     @pytest.mark.parametrize("prop", ("firstName", "lastName", "password"))
     def test_add_user_without_required_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
         del payload[prop]
@@ -36,6 +38,7 @@ class TestAPIAddUser:
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonErrors.REQUIRED_PROP.format(prop))
 
+    @pytest.mark.testomatio("@T04505cec")
     def test_add_user_without_email(self, auth_client: APIClient, payload: dict) -> None:
         del payload["email"]
 
@@ -45,6 +48,7 @@ class TestAPIAddUser:
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["message"]).is_equal_to(UserErrors.USED_EMAIL)
 
+    @pytest.mark.testomatio("@T4ed45d7b")
     def test_add_user_with_already_used_email(self, auth_client: APIClient, payload: dict) -> None:
         for _ in range(2):
             response = auth_client.create_user(user_data=payload)
@@ -53,6 +57,7 @@ class TestAPIAddUser:
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["message"]).is_equal_to(UserErrors.USED_EMAIL)
 
+    @pytest.mark.testomatio("@T4f330f6e")
     @pytest.mark.parametrize(
         "prop, invalid_length_value, limit",
         [
@@ -79,6 +84,7 @@ class TestAPIAddUser:
             CommonErrors.MAX_ALLOWED.format(prop, invalid_length_value, limit)
         )
 
+    @pytest.mark.testomatio("@T01e9eb5f")
     def test_add_user_with_invalid_min_length_value_for_password(
             self,
             auth_client: APIClient,
