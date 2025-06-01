@@ -14,6 +14,7 @@ from src.responses import contact_schema
 class TestAPIUpdateContact:
     IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
 
+    @pytest.mark.testomatio("@T796705bb")
     def test_update_contact_with_valid_data(self, auth_client: APIClient, payload: dict, contact_id: str) -> None:
         response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
@@ -22,6 +23,7 @@ class TestAPIUpdateContact:
         assert_that(payload).is_equal_to(response_data, ignore=self.IGNORED_RESPONSE_FIELDS)
         validate(instance=response_data, schema=contact_schema)
 
+    @pytest.mark.testomatio("@T50936357")
     @pytest.mark.parametrize(
         "prop", (
                 "email", "birthdate", "phone", "street1", "street2", "city", "stateProvince", "postalCode", "country"
@@ -44,6 +46,7 @@ class TestAPIUpdateContact:
         assert_that(payload).is_equal_to(response_data, ignore=self.IGNORED_RESPONSE_FIELDS)
         validate(instance=response_data, schema=contact_schema)
 
+    @pytest.mark.testomatio("@Td6f3dca7")
     @pytest.mark.parametrize("prop", ("firstName", "lastName"))
     def test_update_contact_without_required_property(
             self,
@@ -60,6 +63,7 @@ class TestAPIUpdateContact:
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonErrors.REQUIRED_PROP.format(prop))
 
+    @pytest.mark.testomatio("@T0b2a6ef6")
     @pytest.mark.parametrize(
         "prop, error_txt",
         [
@@ -85,6 +89,7 @@ class TestAPIUpdateContact:
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(error_txt)
 
+    @pytest.mark.testomatio("@Ta3d7f30f")
     def test_update_contact_without_token_provided(
             self,
             unauth_client: APIClient,
@@ -97,6 +102,7 @@ class TestAPIUpdateContact:
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
         assert_that(response_data).is_equal_to(dict(error=CommonErrors.NOT_AUTHENTICATE))
 
+    @pytest.mark.testomatio("@T709d6f24")
     @pytest.mark.parametrize(
         "invalid",
         (get_random_string(), None, get_random_bool(), get_random_int()),

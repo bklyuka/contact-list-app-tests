@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
@@ -11,6 +12,7 @@ from src.application_data import config
 
 class TestAPIGetUserProfile:
 
+    @pytest.mark.testomatio("@Ta8001306")
     def test_get_user_profile_success(self, auth_client: APIClient) -> None:
         response = auth_client.get_user_profile()
         response_data = response.json()
@@ -19,6 +21,7 @@ class TestAPIGetUserProfile:
         assert_that(response_data).contains_entry({"email": config.user_email})
         validate(instance=response_data, schema=user_profile_schema)
 
+    @pytest.mark.testomatio("@T5d325c5e")
     def test_get_user_profile_without_token_provided(self, unauth_client: APIClient) -> None:
         response = unauth_client.get_user_profile()
         response_data = response.json()
