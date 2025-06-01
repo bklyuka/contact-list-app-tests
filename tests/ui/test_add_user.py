@@ -21,7 +21,7 @@ def get_add_user_data() -> CreateUser:
 
 
 @pytest.mark.skip_login
-class TestAddUser:
+class TestUIAddUser:
 
     def test_add_user_with_valid_data_success(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(

@@ -16,7 +16,7 @@ def get_user_payload() -> dict:
     return CreateUser().__dict__
 
 
-class TestAddUser:
+class TestAPIAddUser:
 
     def test_add_user_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
         response = auth_client.create_user(user_data=payload)

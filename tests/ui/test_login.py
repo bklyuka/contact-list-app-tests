@@ -18,7 +18,7 @@ def get_credentials() -> LoginCredentials:
     return LoginCredentials()
 
 
-class TestLogin:
+class TestUILogin:
     def test_login_with_with_valid_data(self, login_page: LoginPage) -> None:
         login_page.email_field.fill(config.user_email)
         login_page.password_field.fill(config.user_password)

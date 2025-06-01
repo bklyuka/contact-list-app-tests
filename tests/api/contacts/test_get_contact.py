@@ -24,7 +24,7 @@ def get_contact(auth_client: APIClient) -> dict:
     return choice(contacts)
 
 
-class TestGetContact:
+class TestAPIGetContact:
 
     def test_get_contact(self, auth_client: APIClient, contact: dict) -> None:
         response = auth_client.get_contact(contact_id=contact["_id"])

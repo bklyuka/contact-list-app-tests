@@ -17,7 +17,7 @@ def get_add_user_data() -> CreateUpdateContact:
     return CreateUpdateContact()
 
 
-class TestAddContact:
+class TestUIAddContact:
 
     def test_navigation_to_contact_list_page_from_add_contact(self, add_contact_page: AddContactPage) -> None:
         add_contact_page.cancel_btn.click()

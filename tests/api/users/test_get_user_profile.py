@@ -9,7 +9,7 @@ from src.responses import user_profile_schema
 from src.application_data import config
 
 
-class TestGetUserProfile:
+class TestAPIGetUserProfile:
 
     def test_get_user_profile_success(self, auth_client: APIClient) -> None:
         response = auth_client.get_user_profile()

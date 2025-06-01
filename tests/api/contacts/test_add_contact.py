@@ -11,7 +11,7 @@ from src.helpers import get_random_string
 from src.responses import contact_schema
 
 
-class TestAddContact:
+class TestAPIAddContact:
     IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
 
     def test_add_contact_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:

@@ -15,7 +15,7 @@ def get_login_payload() -> dict:
     return LoginCredentials().__dict__
 
 
-class TestUserLogin:
+class TestAPIUserLogin:
 
     def test_login_with_valid_data(self, unauth_client: APIClient) -> None:
         response = unauth_client.login(login_data={

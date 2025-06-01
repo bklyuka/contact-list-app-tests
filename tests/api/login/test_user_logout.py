@@ -30,7 +30,7 @@ def get_authenticated_new_client(unauth_client: APIClient, credentials: LoginCre
     return unauth_client
 
 
-class TestUserLogout:
+class TestAPIUserLogout:
 
     def test_logout_successfully(self, client: APIClient) -> None:
         response = client.logout()

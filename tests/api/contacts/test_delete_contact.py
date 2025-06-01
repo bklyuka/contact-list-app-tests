@@ -9,7 +9,7 @@ from src.errors import CommonErrors, ContactErrors
 from src.helpers import get_fake_id, get_random_string, get_random_bool, get_random_int
 
 
-class TestDeleteContact:
+class TestAPIDeleteContact:
 
     def test_delete_contact(self, auth_client: APIClient, contact_id: str) -> None:
         response = auth_client.delete_contact(contact_id=contact_id)

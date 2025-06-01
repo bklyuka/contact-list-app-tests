@@ -6,7 +6,7 @@ from src.api.api_client import APIClient
 from src.errors import CommonErrors
 
 
-class TestDeleteUser:
+class TestAPIDeleteUser:
 
     def test_delete_user_me_successfully(self, client: APIClient) -> None:
         response = client.delete_user_me()
