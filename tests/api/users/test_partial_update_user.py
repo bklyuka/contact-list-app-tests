@@ -12,7 +12,7 @@ from src.responses import user_profile_schema
 from src.application_data import config
 
 
-class TestPartialUpdateUser:
+class TestAPIPartialUpdateUser:
 
     @pytest.mark.parametrize(
         "prop, value",

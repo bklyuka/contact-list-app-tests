@@ -12,7 +12,7 @@ from src.helpers import get_random_string, get_random_int, get_fake_email
 from src.responses import contact_schema
 
 
-class TestPartialUpdateContact:
+class TestAPIPartialUpdateContact:
 
     @pytest.mark.parametrize(
         "prop, value",

@@ -8,7 +8,7 @@ from src.errors import CommonErrors
 from src.responses import get_contacts_schema
 
 
-class TestGetContacts:
+class TestAPIGetContacts:
 
     def test_get_contacts(self, auth_client: APIClient) -> None:
         response = auth_client.get_contacts()
