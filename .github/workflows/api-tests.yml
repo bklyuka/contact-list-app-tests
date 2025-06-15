@@ -22,7 +22,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run simple code
+      - name: Run tests
         run: pytest -m api
         env:
           URL: ${{ secrets.URL }}
