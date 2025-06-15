@@ -2,7 +2,15 @@ name: API Tests
 
 on:
   workflow_dispatch:
-
+    inputs:
+      with_report:
+        description: "Generate report?"
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
 
 jobs:
   run-api-tests:
@@ -23,7 +31,13 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest -m api
+        run: |
+          echo "With report: ${{ github.event.inputs.with_report }}"
+          if [ "${{ github.event.inputs.with_report }}" = "true" ]; then
+            pytest -m api --testomatio report
+          else
+            pytest -m api
+          fi
         env:
           URL: ${{ secrets.URL }}
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
