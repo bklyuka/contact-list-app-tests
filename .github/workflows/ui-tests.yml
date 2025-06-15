@@ -5,7 +5,7 @@ on:
 
 
 jobs:
-  run-api-tests:
+  run-ui-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run simple code
+      - name: install Playwright browsers
+        run: |
+          python -m playwright install
+
+      - name: Run tests
         run: pytest -m ui
         env:
           URL: ${{ secrets.URL }}
