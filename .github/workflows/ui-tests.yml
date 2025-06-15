@@ -2,6 +2,16 @@ name: UI Tests
 
 on:
   workflow_dispatch:
+    inputs:
+      browser:
+        description: "Choose a browser"
+        required: true
+        default: "chromium"
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
 
 
 jobs:
@@ -27,7 +37,9 @@ jobs:
           python -m playwright install
 
       - name: Run tests
-        run: pytest -m ui
+        run: |
+          echo "Running UI tests in browser: ${{ github.event.inputs.browser }}"
+          pytest -m ui --browser-name=${{ github.event.inputs.browser }}
         env:
           URL: ${{ secrets.URL }}
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
