@@ -15,6 +15,7 @@ class TestAPIAddContact:
     IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
 
     @pytest.mark.testomatio("@T0aaa513b")
+    @pytest.mark.api
     def test_add_contact_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
         response = auth_client.create_contact(contact_data=payload)
         response_data = response.json()
@@ -24,6 +25,7 @@ class TestAPIAddContact:
         validate(instance=response_data, schema=contact_schema)
 
     @pytest.mark.testomatio("@T62495e27")
+    @pytest.mark.api
     @pytest.mark.parametrize(
         "prop", (
                 "email", "birthdate", "phone", "street1", "street2", "city", "stateProvince", "postalCode", "country"
@@ -40,6 +42,7 @@ class TestAPIAddContact:
         validate(instance=response_data, schema=contact_schema)
 
     @pytest.mark.testomatio("@T9afcc0e3")
+    @pytest.mark.api
     @pytest.mark.parametrize("prop", ("firstName", "lastName"))
     def test_add_contact_without_required_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
         del payload[prop]
@@ -51,6 +54,7 @@ class TestAPIAddContact:
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonErrors.REQUIRED_PROP.format(prop))
 
     @pytest.mark.testomatio("@T958b50b1")
+    @pytest.mark.api
     @pytest.mark.parametrize(
         "prop, error_txt",
         [
@@ -76,6 +80,7 @@ class TestAPIAddContact:
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(error_txt)
 
     @pytest.mark.testomatio("@Tdccf994e")
+    @pytest.mark.api
     def test_add_contact_without_token_provided(self, unauth_client: APIClient, payload: dict) -> None:
         response = unauth_client.create_contact(contact_data=payload)
         response_data = response.json()

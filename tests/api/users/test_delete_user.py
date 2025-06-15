@@ -10,6 +10,7 @@ from src.errors import CommonErrors
 class TestAPIDeleteUser:
 
     @pytest.mark.testomatio("@T8ef4b4f4")
+    @pytest.mark.api
     def test_delete_user_me_successfully(self, client: APIClient) -> None:
         response = client.delete_user_me()
 
@@ -17,6 +18,7 @@ class TestAPIDeleteUser:
         assert_that(response.text()).is_empty()
 
     @pytest.mark.testomatio("@Tdc6f1494")
+    @pytest.mark.api
     def test_delete_user_me_without_token_provided(self, unauth_client: APIClient) -> None:
         response = unauth_client.delete_user_me()
         response_data = response.json()

@@ -13,6 +13,7 @@ from src.application_data import config
 class TestAPIGetUserProfile:
 
     @pytest.mark.testomatio("@Ta8001306")
+    @pytest.mark.api
     def test_get_user_profile_success(self, auth_client: APIClient) -> None:
         response = auth_client.get_user_profile()
         response_data = response.json()
@@ -22,6 +23,7 @@ class TestAPIGetUserProfile:
         validate(instance=response_data, schema=user_profile_schema)
 
     @pytest.mark.testomatio("@T5d325c5e")
+    @pytest.mark.api
     def test_get_user_profile_without_token_provided(self, unauth_client: APIClient) -> None:
         response = unauth_client.get_user_profile()
         response_data = response.json()

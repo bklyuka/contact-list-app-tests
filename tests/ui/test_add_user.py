@@ -24,6 +24,7 @@ def get_add_user_data() -> CreateUser:
 class TestUIAddUser:
 
     @pytest.mark.testomatio("@T1cf3dc90")
+    @pytest.mark.ui
     def test_add_user_with_valid_data_success(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -36,6 +37,7 @@ class TestUIAddUser:
         expect(add_user_page.page).to_have_url(re.compile(".*contactList"))
 
     @pytest.mark.testomatio("@T2d3d0c76")
+    @pytest.mark.ui
     def test_add_user_without_data_set(self, add_user_page: AddUserPage) -> None:
         add_user_page.submit_btn.click()
         expect(add_user_page.page).to_have_url(re.compile(".*addUser"))
@@ -47,6 +49,7 @@ class TestUIAddUser:
         )
 
     @pytest.mark.testomatio("@T7cd86037")
+    @pytest.mark.ui
     def test_add_user_without_first_name_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             last_name=user_data.lastName,
@@ -59,6 +62,7 @@ class TestUIAddUser:
         )
 
     @pytest.mark.testomatio("@T0fb9f8e9")
+    @pytest.mark.ui
     def test_add_user_without_last_name_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -71,6 +75,7 @@ class TestUIAddUser:
         )
 
     @pytest.mark.testomatio("@Tc4ae28e6")
+    @pytest.mark.ui
     def test_add_user_without_email_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -83,6 +88,7 @@ class TestUIAddUser:
         )
 
     @pytest.mark.testomatio("@Td2f85b6f")
+    @pytest.mark.ui
     def test_add_user_without_password_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -95,6 +101,7 @@ class TestUIAddUser:
         )
 
     @pytest.mark.testomatio("@Tadb4045f")
+    @pytest.mark.ui
     def test_add_user_with_already_used_email_set(self, add_user_page: AddUserPage, user_data: CreateUser) -> None:
         add_user_page.fill_and_submit_form(
             first_name=user_data.firstName,
@@ -106,6 +113,7 @@ class TestUIAddUser:
         expect(add_user_page.error).to_have_text(UserErrors.USED_EMAIL)
 
     @pytest.mark.testomatio("@Tfa6d1583")
+    @pytest.mark.ui
     def test_add_user_with_invalid_length_value_for_password(
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
@@ -124,6 +132,7 @@ class TestUIAddUser:
         )
 
     @pytest.mark.testomatio("@T411cf142")
+    @pytest.mark.ui
     def test_add_user_with_invalid_length_value_for_first_name(
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
@@ -142,6 +151,7 @@ class TestUIAddUser:
         )
 
     @pytest.mark.testomatio("@Td1d76049")
+    @pytest.mark.ui
     def test_add_user_with_invalid_length_value_for_last_name(
             self, add_user_page: AddUserPage, user_data: CreateUser
     ) -> None:
@@ -160,6 +170,7 @@ class TestUIAddUser:
         )
 
     @pytest.mark.testomatio("@T5f208300")
+    @pytest.mark.ui
     def test_navigation_to_login_page_from_add_user(self, add_user_page: AddUserPage) -> None:
         add_user_page.cancel_btn.click()
         expect(add_user_page.page_name).to_have_text("Contact List App")
