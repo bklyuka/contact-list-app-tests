@@ -15,6 +15,7 @@ from src.application_data import config
 class TestAPIPartialUpdateUser:
 
     @pytest.mark.testomatio("@Td447d494")
+    @pytest.mark.api
     @pytest.mark.parametrize(
         "prop, value",
         [
@@ -36,6 +37,7 @@ class TestAPIPartialUpdateUser:
         validate(instance=response_data, schema=user_profile_schema)
 
     @pytest.mark.testomatio("@Tc352a2c7")
+    @pytest.mark.api
     def test_partial_update_user_with_already_used_email(self, client: APIClient) -> None:
         payload = {"email": config.user_email}
 
@@ -46,6 +48,7 @@ class TestAPIPartialUpdateUser:
         assert_that(response_data["keyValue"]).contains_entry(payload)
 
     @pytest.mark.testomatio("@T9eef2b93")
+    @pytest.mark.api
     @pytest.mark.parametrize(
         "prop, invalid_length_value, limit",
         [
@@ -72,6 +75,7 @@ class TestAPIPartialUpdateUser:
         )
 
     @pytest.mark.testomatio("@T3220ce10")
+    @pytest.mark.api
     @pytest.mark.parametrize("prop", ("firstName", "lastName", "password"))
     def test_partial_update_user_with_no_data_provided_for_property(
             self,
@@ -87,6 +91,7 @@ class TestAPIPartialUpdateUser:
         assert_that(response_data["errors"][prop]["message"]).is_equal_to(CommonErrors.REQUIRED_PROP.format(prop))
 
     @pytest.mark.testomatio("@Tca463288")
+    @pytest.mark.api
     def test_partial_update_user_with_invalid_min_length_value_for_password(self, client: APIClient) -> None:
         payload = {"password": get_random_string(length=6)}
 
