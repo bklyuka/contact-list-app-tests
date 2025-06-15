@@ -20,12 +20,14 @@ def get_add_user_data() -> CreateUpdateContact:
 class TestUIAddContact:
 
     @pytest.mark.testomatio("@T00d6f888")
+    @pytest.mark.ui
     def test_navigation_to_contact_list_page_from_add_contact(self, add_contact_page: AddContactPage) -> None:
         add_contact_page.cancel_btn.click()
         expect(add_contact_page.page_name).to_have_text("Contact List")
         expect(add_contact_page.page).to_have_url(re.compile(".*contactList"))
 
     @pytest.mark.testomatio("@Tbb3b8187")
+    @pytest.mark.ui
     def test_add_contact_without_data_set(self, add_contact_page: AddContactPage) -> None:
         add_contact_page.submit_btn.click()
         expect(add_contact_page.page).to_have_url(re.compile(".*addContact"))
@@ -35,6 +37,7 @@ class TestUIAddContact:
         )
 
     @pytest.mark.testomatio("@T94759e77")
+    @pytest.mark.ui
     def test_add_contact_without_first_name_set(
             self, add_contact_page: AddContactPage, contact_data: CreateUpdateContact
 
@@ -47,6 +50,7 @@ class TestUIAddContact:
         )
 
     @pytest.mark.testomatio("@T046d57db")
+    @pytest.mark.ui
     def test_add_contact_without_last_name_set(
             self, add_contact_page: AddContactPage, contact_data: CreateUpdateContact
 
