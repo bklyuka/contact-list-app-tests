@@ -5,10 +5,20 @@ import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
-from src.api.api_client import APIClient
+from src.api.contact_api import ContactAPI
 from src.errors import CommonErrors
 from src.helpers import get_random_string
 from src.responses import contact_schema
+
+
+@pytest.fixture(name="contact_api", scope="class")
+def get_contact_api(auth_client) -> ContactAPI:
+    return ContactAPI(auth_client)
+
+
+@pytest.fixture(name="contact_api_no_auth")
+def get_contact_api_not_auth(unauth_client) -> ContactAPI:
+    return ContactAPI(unauth_client)
 
 
 class TestAPIAddContact:
@@ -16,8 +26,8 @@ class TestAPIAddContact:
 
     @pytest.mark.testomatio("@T0aaa513b")
     @pytest.mark.api
-    def test_add_contact_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
-        response = auth_client.create_contact(contact_data=payload)
+    def test_add_contact_with_valid_data(self, contact_api: ContactAPI, payload: dict) -> None:
+        response = contact_api.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.CREATED, response_data
@@ -31,10 +41,10 @@ class TestAPIAddContact:
                 "email", "birthdate", "phone", "street1", "street2", "city", "stateProvince", "postalCode", "country"
         )
     )
-    def test_add_contact_without_optional_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
+    def test_add_contact_without_optional_property(self, contact_api: ContactAPI, payload: dict, prop: str) -> None:
         del payload[prop]
 
-        response = auth_client.create_contact(contact_data=payload)
+        response = contact_api.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.CREATED, response_data
@@ -44,10 +54,10 @@ class TestAPIAddContact:
     @pytest.mark.testomatio("@T9afcc0e3")
     @pytest.mark.api
     @pytest.mark.parametrize("prop", ("firstName", "lastName"))
-    def test_add_contact_without_required_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
+    def test_add_contact_without_required_property(self, contact_api: ContactAPI, payload: dict, prop: str) -> None:
         del payload[prop]
 
-        response = auth_client.create_contact(contact_data=payload)
+        response = contact_api.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -66,14 +76,14 @@ class TestAPIAddContact:
     )
     def test_add_contact_with_invalid_data(
             self,
-            auth_client: APIClient,
+            contact_api: ContactAPI,
             payload: dict,
             prop: str,
             error_txt: str
     ) -> None:
         payload[prop] = get_random_string()
 
-        response = auth_client.create_contact(contact_data=payload)
+        response = contact_api.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -81,8 +91,8 @@ class TestAPIAddContact:
 
     @pytest.mark.testomatio("@Tdccf994e")
     @pytest.mark.api
-    def test_add_contact_without_token_provided(self, unauth_client: APIClient, payload: dict) -> None:
-        response = unauth_client.create_contact(contact_data=payload)
+    def test_add_contact_without_token_provided(self, contact_api_no_auth: ContactAPI, payload: dict) -> None:
+        response = contact_api_no_auth.create(contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
