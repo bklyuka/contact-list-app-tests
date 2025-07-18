@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import List
 
 import pytest
 from assertpy import assert_that
@@ -11,18 +10,8 @@ from src.helpers import get_random_string
 from src.responses import contact_schema
 
 
-@pytest.fixture(name="contact_api", scope="class")
-def get_contact_api(auth_client) -> ContactAPI:
-    return ContactAPI(auth_client)
-
-
-@pytest.fixture(name="contact_api_no_auth")
-def get_contact_api_not_auth(unauth_client) -> ContactAPI:
-    return ContactAPI(unauth_client)
-
-
 class TestAPIAddContact:
-    IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
+    IGNORED_RESPONSE_FIELDS: list[str] = ["_id", "owner", "__v"]
 
     @pytest.mark.testomatio("@T0aaa513b")
     @pytest.mark.api
