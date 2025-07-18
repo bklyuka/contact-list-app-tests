@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import Any
 
 import pytest
 from assertpy import assert_that
@@ -37,7 +36,7 @@ class TestAPIPartialUpdateContact:
             contact_api: ContactAPI,
             contact_id: str,
             prop: str,
-            value: Any
+            value: object
     ) -> None:
         payload = {prop: value}
 
@@ -69,7 +68,7 @@ class TestAPIPartialUpdateContact:
             contact_api: ContactAPI,
             contact_id: str,
             prop: str,
-            invalid_length_value: Any,
+            invalid_length_value: object,
             limit: int
     ) -> None:
         payload = {prop: invalid_length_value}

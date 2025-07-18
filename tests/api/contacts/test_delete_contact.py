@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import Any
 
 import pytest
 from assertpy import assert_that
@@ -34,7 +33,7 @@ class TestAPIDeleteContact:
         (get_random_string(), None, get_random_bool(), get_random_int()),
         ids=("string", "None", "boolean", "integer")
     )
-    def test_delete_contact_with_invalid_contact_id(self, contact_api: ContactAPI, invalid: Any) -> None:
+    def test_delete_contact_with_invalid_contact_id(self, contact_api: ContactAPI, invalid: object) -> None:
         response = contact_api.delete(contact_id=invalid)
 
         assert response.status == HTTPStatus.BAD_REQUEST

@@ -1,6 +1,5 @@
 from random import choice
 from http import HTTPStatus
-from typing import Any
 
 import pytest
 from assertpy import assert_that
@@ -51,7 +50,7 @@ class TestAPIGetContact:
         (get_random_string(), None, get_random_bool(), get_random_int()),
         ids=("string", "None", "boolean", "integer")
     )
-    def test_get_contact_with_invalid_data(self, contact_api: ContactAPI, invalid: Any) -> None:
+    def test_get_contact_with_invalid_data(self, contact_api: ContactAPI, invalid: object) -> None:
         response = contact_api.get(contact_id=invalid)
 
         assert response.status == HTTPStatus.BAD_REQUEST

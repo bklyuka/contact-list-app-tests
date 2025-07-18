@@ -22,7 +22,7 @@ def get_contact_id(contact_api: ContactAPI) -> str:
     return choice(contacts)["_id"]
 
 
-@pytest.fixture(name="contact_api", scope="class")
+@pytest.fixture(name="contact_api", scope="module")
 def get_contact_api(auth_client) -> ContactAPI:
     return ContactAPI(auth_client)
 

@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import Any, List
 
 import pytest
 from assertpy import assert_that
@@ -12,7 +11,7 @@ from src.responses import contact_schema
 
 
 class TestAPIUpdateContact:
-    IGNORED_RESPONSE_FIELDS: List[str] = ["_id", "owner", "__v"]
+    IGNORED_RESPONSE_FIELDS: list[str] = ["_id", "owner", "__v"]
 
     @pytest.mark.testomatio("@T796705bb")
     @pytest.mark.api
@@ -114,7 +113,9 @@ class TestAPIUpdateContact:
         (get_random_string(), None, get_random_bool(), get_random_int()),
         ids=("string", "None", "boolean", "integer")
     )
-    def test_update_contact_with_invalid_contact_id(self, contact_api: ContactAPI, payload: dict, invalid: Any) -> None:
+    def test_update_contact_with_invalid_contact_id(
+            self, contact_api: ContactAPI, payload: dict, invalid: object
+    ) -> None:
         response = contact_api.update(contact_id=invalid, contact_data=payload)
 
         assert response.status == HTTPStatus.BAD_REQUEST
