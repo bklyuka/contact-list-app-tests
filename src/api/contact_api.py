@@ -1,14 +1,14 @@
 from playwright.sync_api import APIResponse
 
-from src.api.request import Request
+from src.api.api_http_client import ApiHttpClient
 
 
 class ContactAPI:
     CONTACTS: str = "/contacts"
     CONTACT_BY_ID: str = "/contacts/{id}"
 
-    def __init__(self, request: Request):
-        self._request: Request = request
+    def __init__(self, request: ApiHttpClient):
+        self._request: ApiHttpClient = request
 
     def create_contact(self, contact_data: dict) -> APIResponse:
         return self._request.post(path=self.CONTACTS, data=contact_data)
