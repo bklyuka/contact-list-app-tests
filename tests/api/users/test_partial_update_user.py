@@ -5,7 +5,6 @@ import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
-from src.api.api_client import APIClient
 from src.errors import CommonErrors
 from src.helpers import get_random_string, get_fake_email
 from src.responses import user_profile_schema
