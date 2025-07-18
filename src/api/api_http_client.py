@@ -2,8 +2,6 @@ from typing import Optional
 
 from playwright.sync_api import APIRequestContext, APIResponse
 
-from src.api.user_api import UserAPI
-
 
 class ApiHttpClient:
     def __init__(self, request: APIRequestContext, base_url: str):
@@ -56,12 +54,3 @@ class ApiHttpClient:
             url=self.__build_url(path),
             headers=headers
         )
-
-    def authenticate(self, user_email: str, password: str) -> None:
-        response = UserAPI(self).login(
-            login_data={
-                "email": user_email,
-                "password": password
-            }
-        )
-        self.set_token(response.json()["token"])

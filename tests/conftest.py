@@ -3,6 +3,7 @@ from playwright.sync_api import APIRequestContext
 from playwright.sync_api import sync_playwright
 
 from src.api.api_http_client import ApiHttpClient
+from src.api.user_api import UserAPI
 from src.application_data import config
 
 
@@ -26,7 +27,8 @@ def get_auth_client(playwright_context) -> ApiHttpClient:
     """Session with authentication"""
     # request = _build_request(playwright_context)
     client = ApiHttpClient(playwright_context, config.url)
-    client.authenticate(user_email=config.user_email, password=config.user_password)
+    user_api = UserAPI(client)
+    user_api.authenticate(user_email=config.user_email, password=config.user_password)
     return client
 
 

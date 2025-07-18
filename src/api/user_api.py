@@ -9,23 +9,27 @@ class UserAPI:
     USERS: str = "/users"
     USER_PROFILE: str = "/users/me"
 
-    def __init__(self, request):
-        self._request = request
+    def __init__(self, client: ApiHttpClient):
+        self._client = client
 
     def login(self, login_data: dict) -> APIResponse:
-        return self._request.post(path=self.LOGIN, data=login_data)
+        return self._client.post(path=self.LOGIN, data=login_data)
 
     def logout(self) -> APIResponse:
-        return self._request.post(path=self.LOGOUT)
+        return self._client.post(path=self.LOGOUT)
 
-    def create_user(self, user_data: dict) -> APIResponse:
-        return self._request.post(path=self.USERS, data=user_data)
+    def create(self, user_data: dict) -> APIResponse:
+        return self._client.post(path=self.USERS, data=user_data)
 
     def partial_update_user(self, user_data: dict) -> APIResponse:
-        return self._request.patch(path=self.USER_PROFILE, data=user_data)
+        return self._client.patch(path=self.USER_PROFILE, data=user_data)
 
-    def get_user_profile(self) -> APIResponse:
-        return self._request.get(path=self.USER_PROFILE)
+    def get_profile(self) -> APIResponse:
+        return self._client.get(path=self.USER_PROFILE)
 
     def delete_user_me(self) -> APIResponse:
-        return self._request.delete(path=self.USER_PROFILE)
+        return self._client.delete(path=self.USER_PROFILE)
+
+    def authenticate(self, user_email: str, password: str) -> None:
+        response = self.login(login_data={"email": user_email, "password": password})
+        self._client.set_token(response.json()["token"])
