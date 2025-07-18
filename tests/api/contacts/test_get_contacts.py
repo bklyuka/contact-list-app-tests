@@ -4,7 +4,7 @@ import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
-from src.api.api_client import APIClient
+from src.api.contact_api import ContactAPI
 from src.errors import CommonErrors
 from src.responses import get_contacts_schema
 
@@ -13,8 +13,8 @@ class TestAPIGetContacts:
 
     @pytest.mark.testomatio("@T47741f1c")
     @pytest.mark.api
-    def test_get_contacts(self, auth_client: APIClient) -> None:
-        response = auth_client.get_contacts()
+    def test_get_contacts(self, contact_api: ContactAPI) -> None:
+        response = contact_api.get_all()
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -22,8 +22,8 @@ class TestAPIGetContacts:
 
     @pytest.mark.testomatio("@T0824170f")
     @pytest.mark.api
-    def test_get_contacts_without_token_provided(self, unauth_client: APIClient) -> None:
-        response = unauth_client.get_contacts()
+    def test_get_contacts_without_token_provided(self, contact_api_no_auth: ContactAPI) -> None:
+        response = contact_api_no_auth.get_all()
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data

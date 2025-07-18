@@ -1,5 +1,4 @@
 from random import choice
-from typing import Any
 
 import pytest
 
@@ -8,7 +7,7 @@ from src.payloads import CreateUpdateContact
 
 
 @pytest.fixture(name="payload")
-def get_contact_payload() -> dict[str, Any]:
+def get_contact_payload() -> dict[str, object]:
     return CreateUpdateContact().__dict__
 
 

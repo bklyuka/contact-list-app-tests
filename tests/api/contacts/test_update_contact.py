@@ -5,7 +5,7 @@ import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
-from src.api.api_client import APIClient
+from src.api.contact_api import ContactAPI
 from src.errors import ContactErrors, CommonErrors
 from src.helpers import get_random_string, get_random_bool, get_random_int
 from src.responses import contact_schema
@@ -16,8 +16,8 @@ class TestAPIUpdateContact:
 
     @pytest.mark.testomatio("@T796705bb")
     @pytest.mark.api
-    def test_update_contact_with_valid_data(self, auth_client: APIClient, payload: dict, contact_id: str) -> None:
-        response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
+    def test_update_contact_with_valid_data(self, contact_api: ContactAPI, payload: dict, contact_id: str) -> None:
+        response = contact_api.update(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -33,14 +33,14 @@ class TestAPIUpdateContact:
     )
     def test_update_contact_without_optional_property(
             self,
-            auth_client: APIClient,
+            contact_api: ContactAPI,
             contact_id: str,
             payload: dict,
             prop: str
     ) -> None:
         del payload[prop]
 
-        response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = contact_api.update(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -53,14 +53,14 @@ class TestAPIUpdateContact:
     @pytest.mark.parametrize("prop", ("firstName", "lastName"))
     def test_update_contact_without_required_property(
             self,
-            auth_client: APIClient,
+            contact_api: ContactAPI,
             contact_id: str,
             payload: dict,
             prop: str
     ) -> None:
         del payload[prop]
 
-        response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = contact_api.update(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -79,7 +79,7 @@ class TestAPIUpdateContact:
     )
     def test_update_contact_with_invalid_data(
             self,
-            auth_client: APIClient,
+            contact_api: ContactAPI,
             contact_id: str,
             payload: dict,
             prop: str,
@@ -87,7 +87,7 @@ class TestAPIUpdateContact:
     ) -> None:
         payload[prop] = get_random_string()
 
-        response = auth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = contact_api.update(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -97,11 +97,11 @@ class TestAPIUpdateContact:
     @pytest.mark.api
     def test_update_contact_without_token_provided(
             self,
-            unauth_client: APIClient,
+            contact_api_no_auth: ContactAPI,
             contact_id: str,
             payload: dict
     ) -> None:
-        response = unauth_client.update_contact(contact_id=contact_id, contact_data=payload)
+        response = contact_api_no_auth.update(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
@@ -114,8 +114,8 @@ class TestAPIUpdateContact:
         (get_random_string(), None, get_random_bool(), get_random_int()),
         ids=("string", "None", "boolean", "integer")
     )
-    def test_update_contact_with_invalid_contact_id(self, auth_client: APIClient, payload: dict, invalid: Any) -> None:
-        response = auth_client.update_contact(contact_id=invalid, contact_data=payload)
+    def test_update_contact_with_invalid_contact_id(self, contact_api: ContactAPI, payload: dict, invalid: Any) -> None:
+        response = contact_api.update(contact_id=invalid, contact_data=payload)
 
         assert response.status == HTTPStatus.BAD_REQUEST
         assert_that(response.text()).is_equal_to(ContactErrors.INVALID_ID)
