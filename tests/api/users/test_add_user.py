@@ -16,11 +16,6 @@ def get_user_payload() -> dict:
     return CreateUser().__dict__
 
 
-@pytest.fixture(name="user_api", scope="class")
-def get_user_api(auth_client) -> UserAPI:
-    return UserAPI(auth_client)
-
-
 class TestAPIAddUser:
 
     @pytest.mark.testomatio("@Tdf19d3af")

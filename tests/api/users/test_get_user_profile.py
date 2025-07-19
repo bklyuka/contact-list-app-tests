@@ -10,16 +10,6 @@ from src.errors import CommonErrors
 from src.responses import user_profile_schema
 
 
-@pytest.fixture(name="user_api")
-def get_user_api(auth_client) -> UserAPI:
-    return UserAPI(auth_client)
-
-
-@pytest.fixture(name="user_api_not_auth")
-def get_user_api_not_auth(unauth_client) -> UserAPI:
-    return UserAPI(unauth_client)
-
-
 class TestAPIGetUserProfile:
 
     @pytest.mark.testomatio("@Ta8001306")
