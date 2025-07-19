@@ -17,7 +17,7 @@ def get_user_payload() -> dict:
 
 
 @pytest.fixture(name="user_api", scope="class")
-def get_user_api(auth_client):
+def get_user_api(auth_client) -> UserAPI:
     return UserAPI(auth_client)
 
 
