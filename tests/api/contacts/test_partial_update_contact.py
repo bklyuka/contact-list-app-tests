@@ -4,7 +4,7 @@ import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
-from src.api.contact_api import ContactAPI
+from src.api.contact_api import ContactApi
 from src.errors import CommonErrors
 from src.faker_provider import faker
 from src.helpers import get_random_string, get_random_int, get_fake_email
@@ -33,7 +33,7 @@ class TestAPIPartialUpdateContact:
     )
     def test_partial_update_contact_with_valid_data(
             self,
-            contact_api: ContactAPI,
+            contact_api: ContactApi,
             contact_id: str,
             prop: str,
             value: object
@@ -65,7 +65,7 @@ class TestAPIPartialUpdateContact:
     )
     def test_partial_update_contact_with_invalid_max_length_value_for_property(
             self,
-            contact_api: ContactAPI,
+            contact_api: ContactApi,
             contact_id: str,
             prop: str,
             invalid_length_value: object,
@@ -94,7 +94,7 @@ class TestAPIPartialUpdateContact:
     )
     def test_partial_update_contact_with_invalid_value_for_property(
             self,
-            contact_api: ContactAPI,
+            contact_api: ContactApi,
             contact_id: str,
             prop: str,
             error_msg: str
@@ -110,7 +110,7 @@ class TestAPIPartialUpdateContact:
     @pytest.mark.testomatio("@T7d66a4bb")
     @pytest.mark.api
     def test_partial_update_contact_without_token_provided(
-            self, contact_api_no_auth: ContactAPI, contact_id: str
+            self, contact_api_no_auth: ContactApi, contact_id: str
     ) -> None:
         response = contact_api_no_auth.partial_update(contact_id=contact_id, contact_data={})
         response_data = response.json()

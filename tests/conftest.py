@@ -2,7 +2,7 @@ import pytest
 from playwright.sync_api import sync_playwright
 
 from src.api.api_http_client import ApiHttpClient
-from src.api.user_api import UserAPI
+from src.api.user_api import UserApi
 from src.application_data import config
 
 
@@ -18,7 +18,7 @@ def playwright_context():
 def get_auth_client(playwright_context) -> ApiHttpClient:
     """Session with authentication"""
     client = ApiHttpClient(playwright_context, config.url)
-    user_api = UserAPI(client)
+    user_api = UserApi(client)
     user_api.authenticate(user_email=config.user_email, password=config.user_password)
     return client
 

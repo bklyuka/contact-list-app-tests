@@ -3,7 +3,7 @@ from playwright.sync_api import APIResponse
 from src.api.api_http_client import ApiHttpClient
 
 
-class UserAPI:
+class UserApi:
     LOGIN: str = "/users/login"
     LOGOUT: str = "/users/logout"
     USERS: str = "/users"

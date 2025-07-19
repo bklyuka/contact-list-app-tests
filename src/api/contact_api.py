@@ -3,7 +3,7 @@ from playwright.sync_api import APIResponse
 from src.api.api_http_client import ApiHttpClient
 
 
-class ContactAPI:
+class ContactApi:
     CONTACTS: str = "/contacts"
     CONTACT_BY_ID: str = "/contacts/{id}"
 

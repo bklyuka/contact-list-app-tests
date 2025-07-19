@@ -1,6 +1,6 @@
 import pytest
 
-from src.api.user_api import UserAPI
+from src.api.user_api import UserApi
 from src.payloads import LoginCredentials
 
 
@@ -11,4 +11,4 @@ def get_login_payload() -> dict:
 
 @pytest.fixture(name="user_api")
 def get_user_api(unauth_client):
-    return UserAPI(unauth_client)
+    return UserApi(unauth_client)
