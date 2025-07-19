@@ -2,23 +2,11 @@ from http import HTTPStatus
 
 import pytest
 from assertpy import assert_that
-
-
-from src.api.user_api import UserAPI
-from src.payloads import LoginCredentials
-from src.responses import login_schema
-from src.application_data import config
 from jsonschema.validators import validate
 
-
-@pytest.fixture(name="payload")
-def get_login_payload() -> dict:
-    return LoginCredentials().__dict__
-
-
-@pytest.fixture(name="user_api")
-def get_user_api(unauth_client):
-    return UserAPI(unauth_client)
+from src.api.user_api import UserAPI
+from src.application_data import config
+from src.responses import login_schema
 
 
 class TestAPIUserLogin:

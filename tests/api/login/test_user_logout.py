@@ -8,11 +8,6 @@ from src.errors import CommonErrors
 from src.payloads import CreateUser, LoginCredentials
 
 
-@pytest.fixture(name="user_api")
-def get_user_api(unauth_client):
-    return UserAPI(unauth_client)
-
-
 @pytest.fixture(name="credentials")
 def get_creds_of_new_user(user_api: UserAPI) -> LoginCredentials:
     credentials_ = LoginCredentials()
