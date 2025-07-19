@@ -1,12 +1,11 @@
 from random import choice
 from http import HTTPStatus
-from typing import Any
 
 import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
-from src.api.api_client import APIClient
+from src.api.contact_api import ContactApi
 from src.errors import CommonErrors, ContactErrors
 from src.helpers import get_random_string, get_random_bool, get_random_int, get_fake_id
 from src.payloads import CreateUpdateContact
@@ -14,12 +13,12 @@ from src.responses import contact_schema
 
 
 @pytest.fixture(scope="class", name="contact")
-def get_contact(auth_client: APIClient) -> dict:
-    data = auth_client.get_contacts()
+def get_contact(contact_api: ContactApi) -> dict:
+    data = contact_api.get_all()
     contacts = data.json()
 
     if not contacts:
-        contact = auth_client.create_contact(contact_data=CreateUpdateContact().__dict__)
+        contact = contact_api.create(contact_data=CreateUpdateContact().__dict__)
         return contact.json()
     return choice(contacts)
 
@@ -28,8 +27,8 @@ class TestAPIGetContact:
 
     @pytest.mark.testomatio("@Tc1e88708")
     @pytest.mark.api
-    def test_get_contact(self, auth_client: APIClient, contact: dict) -> None:
-        response = auth_client.get_contact(contact_id=contact["_id"])
+    def test_get_contact(self, contact_api: ContactApi, contact: dict) -> None:
+        response = contact_api.get(contact_id=contact["_id"])
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -38,8 +37,8 @@ class TestAPIGetContact:
 
     @pytest.mark.testomatio("@T15642495")
     @pytest.mark.api
-    def test_get_contact_with_non_existing_id(self, auth_client: APIClient) -> None:
-        response = auth_client.get_contact(contact_id=get_fake_id())
+    def test_get_contact_with_non_existing_id(self, contact_api: ContactApi) -> None:
+        response = contact_api.get(contact_id=get_fake_id())
 
         assert response.status == HTTPStatus.NOT_FOUND
         assert_that(response.text()).is_empty()
@@ -51,16 +50,16 @@ class TestAPIGetContact:
         (get_random_string(), None, get_random_bool(), get_random_int()),
         ids=("string", "None", "boolean", "integer")
     )
-    def test_get_contact_with_invalid_data(self, auth_client: APIClient, invalid: Any) -> None:
-        response = auth_client.get_contact(contact_id=invalid)
+    def test_get_contact_with_invalid_data(self, contact_api: ContactApi, invalid: object) -> None:
+        response = contact_api.get(contact_id=invalid)
 
         assert response.status == HTTPStatus.BAD_REQUEST
         assert_that(response.text()).is_equal_to(ContactErrors.INVALID_ID)
 
     @pytest.mark.testomatio("@T13fb3a78")
     @pytest.mark.api
-    def test_get_contact_without_token_provided(self, unauth_client: APIClient, contact: dict) -> None:
-        response = unauth_client.get_contact(contact_id=contact["_id"])
+    def test_get_contact_without_token_provided(self, contact_api_no_auth: ContactApi, contact: dict) -> None:
+        response = contact_api_no_auth.get(contact_id=contact["_id"])
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data

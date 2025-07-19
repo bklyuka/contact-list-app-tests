@@ -3,7 +3,7 @@ from typing import Optional
 from playwright.sync_api import APIRequestContext, APIResponse
 
 
-class Request:
+class ApiHttpClient:
     def __init__(self, request: APIRequestContext, base_url: str):
         self._request: APIRequestContext = request
         self._base_url: str = base_url

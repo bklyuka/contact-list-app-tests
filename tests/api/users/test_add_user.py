@@ -4,7 +4,7 @@ import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
-from src.api.api_client import APIClient
+from src.api.user_api import UserApi
 from src.errors import CommonErrors, UserErrors
 from src.helpers import get_random_string
 from src.payloads import CreateUser
@@ -20,8 +20,8 @@ class TestAPIAddUser:
 
     @pytest.mark.testomatio("@Tdf19d3af")
     @pytest.mark.api
-    def test_add_user_with_valid_data(self, auth_client: APIClient, payload: dict) -> None:
-        response = auth_client.create_user(user_data=payload)
+    def test_add_user_with_valid_data(self, user_api: UserApi, payload: dict) -> None:
+        response = user_api.create(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.CREATED, response_data
@@ -31,10 +31,10 @@ class TestAPIAddUser:
     @pytest.mark.testomatio("@Taf29d325")
     @pytest.mark.api
     @pytest.mark.parametrize("prop", ("firstName", "lastName", "password"))
-    def test_add_user_without_required_property(self, auth_client: APIClient, payload: dict, prop: str) -> None:
+    def test_add_user_without_required_property(self, user_api: UserApi, payload: dict, prop: str) -> None:
         del payload[prop]
 
-        response = auth_client.create_user(user_data=payload)
+        response = user_api.create(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -42,10 +42,10 @@ class TestAPIAddUser:
 
     @pytest.mark.testomatio("@T04505cec")
     @pytest.mark.api
-    def test_add_user_without_email(self, auth_client: APIClient, payload: dict) -> None:
+    def test_add_user_without_email(self, user_api: UserApi, payload: dict) -> None:
         del payload["email"]
 
-        response = auth_client.create_user(user_data=payload)
+        response = user_api.create(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -53,9 +53,9 @@ class TestAPIAddUser:
 
     @pytest.mark.testomatio("@T4ed45d7b")
     @pytest.mark.api
-    def test_add_user_with_already_used_email(self, auth_client: APIClient, payload: dict) -> None:
+    def test_add_user_with_already_used_email(self, user_api: UserApi, payload: dict) -> None:
         for _ in range(2):
-            response = auth_client.create_user(user_data=payload)
+            response = user_api.create(user_data=payload)
             response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -73,7 +73,7 @@ class TestAPIAddUser:
     )
     def test_add_user_with_invalid_max_length_value_for_property(
             self,
-            auth_client: APIClient,
+            user_api: UserApi,
             payload: dict,
             prop: str,
             invalid_length_value: str,
@@ -81,7 +81,7 @@ class TestAPIAddUser:
     ) -> None:
         payload[prop] = invalid_length_value
 
-        response = auth_client.create_user(user_data=payload)
+        response = user_api.create(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -93,12 +93,12 @@ class TestAPIAddUser:
     @pytest.mark.api
     def test_add_user_with_invalid_min_length_value_for_password(
             self,
-            auth_client: APIClient,
+            user_api: UserApi,
             payload: dict
     ) -> None:
         payload["password"] = get_random_string(length=6)
 
-        response = auth_client.create_user(user_data=payload)
+        response = user_api.create(user_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data

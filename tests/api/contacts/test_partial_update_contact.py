@@ -1,11 +1,10 @@
 from http import HTTPStatus
-from typing import Any
 
 import pytest
 from assertpy import assert_that
 from jsonschema.validators import validate
 
-from src.api.api_client import APIClient
+from src.api.contact_api import ContactApi
 from src.errors import CommonErrors
 from src.faker_provider import faker
 from src.helpers import get_random_string, get_random_int, get_fake_email
@@ -34,14 +33,14 @@ class TestAPIPartialUpdateContact:
     )
     def test_partial_update_contact_with_valid_data(
             self,
-            auth_client: APIClient,
+            contact_api: ContactApi,
             contact_id: str,
             prop: str,
-            value: Any
+            value: object
     ) -> None:
         payload = {prop: value}
 
-        response = auth_client.partial_update_contact(contact_id=contact_id, contact_data=payload)
+        response = contact_api.partial_update(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.OK, response_data
@@ -66,15 +65,15 @@ class TestAPIPartialUpdateContact:
     )
     def test_partial_update_contact_with_invalid_max_length_value_for_property(
             self,
-            auth_client: APIClient,
+            contact_api: ContactApi,
             contact_id: str,
             prop: str,
-            invalid_length_value: Any,
+            invalid_length_value: object,
             limit: int
     ) -> None:
         payload = {prop: invalid_length_value}
 
-        response = auth_client.partial_update_contact(contact_id=contact_id, contact_data=payload)
+        response = contact_api.partial_update(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -95,14 +94,14 @@ class TestAPIPartialUpdateContact:
     )
     def test_partial_update_contact_with_invalid_value_for_property(
             self,
-            auth_client: APIClient,
+            contact_api: ContactApi,
             contact_id: str,
             prop: str,
             error_msg: str
     ) -> None:
         payload = {prop: get_random_string()}
 
-        response = auth_client.partial_update_contact(contact_id=contact_id, contact_data=payload)
+        response = contact_api.partial_update(contact_id=contact_id, contact_data=payload)
         response_data = response.json()
 
         assert response.status == HTTPStatus.BAD_REQUEST, response_data
@@ -110,8 +109,10 @@ class TestAPIPartialUpdateContact:
 
     @pytest.mark.testomatio("@T7d66a4bb")
     @pytest.mark.api
-    def test_partial_update_contact_without_token_provided(self, unauth_client: APIClient, contact_id: str) -> None:
-        response = unauth_client.partial_update_contact(contact_id=contact_id, contact_data={})
+    def test_partial_update_contact_without_token_provided(
+            self, contact_api_no_auth: ContactApi, contact_id: str
+    ) -> None:
+        response = contact_api_no_auth.partial_update(contact_id=contact_id, contact_data={})
         response_data = response.json()
 
         assert response.status == HTTPStatus.UNAUTHORIZED, response_data
